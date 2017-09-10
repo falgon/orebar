@@ -1,8 +1,43 @@
-<html>
+<doctype html>
+<html lang="ja">
 	<head>
-		<title>Example App</title>
+	    <meta charset="utf-8">
+	    <title>Example App</title>
+	    <meta http-equiv="cleartype" content="on">
+	    <meta name="MobileOptimized" content="320">
+	    <meta name="HandheldFriendly" content="True">
+	    <meta name="apple-mobile-web-app-capable" content="yes">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	    <link rel="stylesheet" type="text/css" href="./style/dash.css">
 	</head>
+
 	<body>
-		  hello world
+	    <nav id='menu'>
+		<section>
+			<h2>Menu</h2>
+			<ul>
+				<li>menu</li>
+				<li>menu</li>
+				<li>menu</li>
+				<li>menu</li>
+			</ul>
+		</section>
+	</nav>
+	
+	<header class='fixed'>
+		<button class='toggle-button'>☰</button>
+	</header>
+
+	<main id='panel'>
+		<section>
+	    		<h2>Contents</h2>
+	    		<p>
+			Contents
+	    		</p>
+		</section>
+	</main>
+	
+	<script src="../../../../node_modules/slideout/dist/slideout.min.js"></script>
+	<script src='../../../../build/js/dash.js'></script>
 	</body>
 </html>

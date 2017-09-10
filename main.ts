@@ -1,10 +1,9 @@
-const Viewmodule = require('./src/browser/view/view.js');
+//const viewMain = require('./src/browser/view/viewMain.js');
 
-function main() : void {
-	let view = new Viewmodule.View();
-	view.on_ready(function(){
-		console.log('app is ready');
-	});
+import * as viewMain from './src/browser/view/viewMain.js';
+
+function main(): void {
+    viewMain.browser_main();
 }
 
 main();

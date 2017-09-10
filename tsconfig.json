@@ -5,7 +5,6 @@
         "sourceMap": true,
         "types": ["node"],
 	"noImplicitAny": true,
-	"strictNullChecks": true,
 	"preserveConstEnums": true,
 	"noEmitOnError": true,
 	"noUnusedParameters": true,
