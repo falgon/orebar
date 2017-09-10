@@ -19,6 +19,7 @@ export class Page {
         this.mb.setOption('preloadWindow', true);
 	this.mb.setOption('width',800);
 	this.mb.setOption('height',600);
+	this.mb.setOption('icon',process.cwd() + '/src/assets/menubaricon/icon.png');
 
 	//	this.mb.window.transparent = true;
 
