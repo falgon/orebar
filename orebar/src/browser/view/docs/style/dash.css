@@ -72,3 +72,7 @@ header {
   -webkit-transform: translate3d(256px, 0px, 0px);
           transform: translate3d(256px, 0px, 0px);
 }
+
+.toggle-bottun{
+    padding: 5px;
+}

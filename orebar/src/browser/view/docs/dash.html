@@ -1,0 +1,62 @@
+<doctype html>
+<html lang='ja'>
+	<head>
+	    <meta charset='utf-8'>
+	    <title>Example App</title>
+	    <meta http-equiv='cleartype' content='on'>
+	    <meta name='MobileOptimized' content='320'>
+	    <meta name='HandheldFriendly' content='True'>
+	    <meta name='apple-mobile-web-app-capable' content='yes'>
+	    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
+	    <link rel='stylesheet' type='text/css' href='./style/dash.css'>
+	</head>
+
+	<body>
+	    <nav id='menu'>
+		<section>
+			<h2>Menu</h2>
+			<ul>
+			    <li>menu</li>
+			    <li>menu</li>
+			    <li>menu</li>
+			    <li>menu</li>
+			</ul>
+		</section>
+	    </nav>
+	
+	    <header class='fixed'>
+		<div class='toggle-button'>☰</div>
+	    </header>    
+	    <main id='panel'>
+	    	<section>
+		    <h2>Contents</h2>
+		    <p>Contents</p>
+		</section>
+	    </main>
+	    <script src='../../../../node_modules/slideout/dist/slideout.min.js'></script>
+	    <script>
+		const slideout = new Slideout({
+		    'panel': document.getElementById('panel'),
+		    'menu': document.getElementById('menu'),
+		    'padding': 256,
+		    'tolerance': 70
+		});
+		document.querySelector('.toggle-button').addEventListener('mouseover', function () {
+		    slideout.open();
+		});
+
+		document.querySelector('#panel').addEventListener('mouseover', function() {
+		    if (slideout.isOpen()){
+			slideout.close();
+		    }
+		});
+
+		slideout.on('beforeopen', function () {
+		    document.querySelector('.fixed').classList.add('fixed-open');
+		});
+		slideout.on('beforeclose', function () {
+		    document.querySelector('.fixed').classList.remove('fixed-open');
+		});
+	    </script>
+	</body>
+</html>

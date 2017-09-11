@@ -13,13 +13,13 @@ export class Page {
 	this.mb = menubar();
 	this.mb.setOption('dir',process.cwd());
         this.mb.setOption('tooltip', 'Orebar');
-        this.mb.setOption('index', 'file://' + process.cwd() + '/' + f);
+        this.mb.setOption('index', 'file://' + f);
         this.mb.setOption('alwaysOnTop', this.topFrag);
         this.mb.setOption('showDockIcon', this.showDockIcon);
         this.mb.setOption('preloadWindow', true);
 	this.mb.setOption('width',800);
 	this.mb.setOption('height',600);
-	this.mb.setOption('icon',process.cwd() + '/src/assets/menubaricon/icon.png');
+	this.mb.setOption('icon',__dirname + '/../../assets/menubaricon/icon.png');
 
 	//	this.mb.window.transparent = true;
 

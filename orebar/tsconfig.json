@@ -8,7 +8,8 @@
 	"preserveConstEnums": true,
 	"noEmitOnError": true,
 	"noUnusedParameters": true,
-	"noUnusedLocals": true
+	"noUnusedLocals": true,
+	"jsx": "react"
     },
     "exclude": [
         "node_modules",

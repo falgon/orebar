@@ -2,16 +2,17 @@
   "name": "orebar",
   "productName": "Orebar",
   "version": "0.0.1",
-  "description": "",
-  "main": "main.js",
+  "description": "Simply Tumblr viewer on your menu/task bar.",
+  "main": "./src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc && node ./build/build.js",
-    "asar": "./node_modules/asar/bin/asar.js pack . ./dist/Orebar.asar",
+    "build": "npm --prefix ../build/ i && npm i && tsc && node ../build/build.js",
+    "asar": "../build/node_modules/asar/bin/asar.js pack ../orebar ../build/Orebar.asar",
+    "testrun": "npm --prefix ../build/ i && npm i && tsc && electron ./src/main.js", 
     "tsc": "tsc",
-    "watch": "tsc --watch",
+    "tscwatch": "tsc --watch",
     "clean": "rm -f *.js *.map && find ./src -name \"*.js\" -print -exec rm {} \";\" && find ./src -name \"*.map\" -print -exec rm {} \";\"",
-    "start": "electron ."
+    "start": "node ../build/scripts/start.js"
   },
   "author": "roki <falgon53@yahoo.co.jp>",
   "license": "MIT",
@@ -30,21 +31,26 @@
     "url": "https://github.com/falgon/orebar/issues"
   },
   "devDependencies": {
-    "@types/electron-packager": "8.7.3",
     "@types/express": "4.0.37",
-    "@types/menubar": "5.1.5",
     "@types/node": "8.0.27",
-    "@types/slideout": "0.1.19",
     "asar": "^0.13.0",
+    "awesome-typescript-loader": "^3.2.3",
     "electron": "1.7.6",
-    "electron-packager": "*",
     "express": "4.15.4",
     "oauth": "0.9.15",
+    "source-map-loader": "^0.2.1",
     "tumblr": "0.4.1",
-    "typescript": "2.5.2"
+    "typescript": "2.5.2",
+    "webpack": "^3.5.6"
   },
   "dependencies": {
-    "slideout":"1.0.1",
-    "menubar": "*"
+    "@types/menubar": "5.1.5",
+    "@types/react": "^16.0.5",
+    "@types/react-dom": "^15.5.4",
+    "@types/slideout": "0.1.19",
+    "menubar": "^5.2.3",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "slideout": "1.0.1"
   }
 }
