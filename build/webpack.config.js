@@ -3,10 +3,11 @@ const config = {
 };
 
 module.exports = {
-    entry: '../orebar/src/browser/view/docs/dash.tsx',
+    target: 'electron',
+    entry: '../orebar/src/render/dash.tsx',
     output: {
 	filename: 'main_contents.js',
-	path: __dirname + '/../orebar/src/browser/view/docs'
+	path: __dirname + '/../orebar/src/render'
     },
     devtool: 'source-map',
     resolve: {

@@ -1,7 +1,8 @@
 const webpack = require('webpack');
-const entryPath = '../orebar/src/browser/view/docs/';
+const entryPath = '../orebar/src/render/';
 
 module.exports = {
+    target: 'electron',
     entry: entryPath + 'dash.tsx',
     output: {
 	filename: 'main_contents.js',

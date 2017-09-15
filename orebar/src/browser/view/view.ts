@@ -1,14 +1,18 @@
 import * as menubar from 'menubar';
+import * as Electron from 'electron';
+
 interface execType { (): void };
 
 export class Page {
     public mb: any;
     private topFrag: boolean;
     private showDockIcon: boolean;
+    private ipcMain: NodeJS.EventEmitter;
 
     constructor(f: string) {
         this.topFrag = false;
-        this.showDockIcon = false;
+	this.showDockIcon = false;
+	this.ipcMain = Electron.ipcMain;
 
 	this.mb = menubar();
 	this.mb.setOption('dir',process.cwd());

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {ipcRenderer} from 'electron';
 const power = require('react-icons/lib/fa/power-off');
 
 export interface MenuProps { menuTitle: string; list: [string,string][]; }
@@ -24,6 +25,6 @@ export class Menu extends React.Component<MenuProps,undefined>{
     }
 
     handleQuit() : void {
-
+	ipcRenderer.send('clicked_quit');
     }
 }
