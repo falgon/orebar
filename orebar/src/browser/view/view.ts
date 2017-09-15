@@ -17,14 +17,19 @@ export class Page {
         this.mb.setOption('alwaysOnTop', this.topFrag);
         this.mb.setOption('showDockIcon', this.showDockIcon);
         this.mb.setOption('preloadWindow', true);
-	this.mb.setOption('width',800);
-	this.mb.setOption('height',600);
+	this.mb.setOption('width',600);
+	this.mb.setOption('height',400);
+	this.mb.setOption('minWidth',600);
+	this.mb.setOption('minHeight',400);
+
 	this.mb.setOption('icon',__dirname + '/../../assets/menubaricon/icon.png');
-
-	//	this.mb.window.transparent = true;
-
 	this.mb.on('after-hide', () => { this.mb.app.hide() });
+
 	//this.mb.on('after-create-window', () => { this.mb.window.loadURL('http://www.tumblr.com/dashboard'); });
+    }
+
+    downloadURL(url:string):void{
+	this.mb.window.webContents.downloadURL(url);
     }
     
     get app() {
@@ -52,7 +57,4 @@ export class Page {
             x();
         });
     }
-
-
-
 };

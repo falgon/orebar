@@ -9,37 +9,35 @@
 	    <meta name='apple-mobile-web-app-capable' content='yes'>
 	    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
 	    <link rel='stylesheet' type='text/css' href='./style/dash.css'>
+	    <link rel='stylesheet' type='text/css' href='./style/sidemenu.css'>
 	</head>
 
 	<body>
-	    <nav id='menu'>
-		<section>
-			<h2>Menu</h2>
-			<ul>
-			    <li>menu</li>
-			    <li>menu</li>
-			    <li>menu</li>
-			    <li>menu</li>
-			</ul>
-		</section>
-	    </nav>
+	    <script src="../../../../node_modules/react/dist/react.min.js"></script>
+	    <script src="../../../../node_modules/react-dom/dist/react-dom.min.js"></script>
 	
-	    <header class='fixed'>
+	    <div id="mainMenu"></div>    
+	    <script src="./main_contents.js"></script>
+	
+	    <header class='fixed'>    
 		<div class='toggle-button'>☰</div>
 	    </header>    
+	    
 	    <main id='panel'>
 	    	<section>
 		    <h2>Contents</h2>
 		    <p>Contents</p>
 		</section>
 	    </main>
+	    
 	    <script src='../../../../node_modules/slideout/dist/slideout.min.js'></script>
 	    <script>
 		const slideout = new Slideout({
 		    'panel': document.getElementById('panel'),
 		    'menu': document.getElementById('menu'),
-		    'padding': 256,
-		    'tolerance': 70
+		    'padding': 150,
+		    'tolerance': 70,
+		    'duration': 350
 		});
 		document.querySelector('.toggle-button').addEventListener('mouseover', function () {
 		    slideout.open();

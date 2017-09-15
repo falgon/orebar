@@ -10,7 +10,7 @@
   bottom: 0;
   right: 0;
   z-index: 0;
-  width: 256px;
+  width: 150px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   display: none;
@@ -39,13 +39,17 @@ body {
 }
 
 nav {
-  background: #000;
-  color: #fff;
-  padding: 3rem;
+  background: #eee;
+  color: #555555;
 }
 
 main {
-  background: #eee;
+  background: #36465d;
+  box-shadow:-10px 0px 31px 2px #9e9e9e;
+  -moz-box-shadow:-10px 0px 31px 2px #9e9e9e;
+  -webkit-box-shadow:-10px 0px 31px 2px #9e9e9e;
+
+  color: #fff;
   min-height: 100%;
   padding: 3rem 4rem;
 }
@@ -62,17 +66,20 @@ header {
           backface-visibility: hidden;
   position: fixed;
   z-index: 2;
-  -webkit-transition: -webkit-transform 300ms ease;
-  transition: -webkit-transform 300ms ease;
-  transition: transform 300ms ease;
-  transition: transform 300ms ease, -webkit-transform 300ms ease;
+  -webkit-transition: -webkit-transform 350ms ease;
+  transition: -webkit-transform 350ms ease;
+  transition: transform 350ms ease;
+  transition: transform 350ms ease, -webkit-transform 350ms ease;
+  width:25px;
 }
 
 .fixed-open {
-  -webkit-transform: translate3d(256px, 0px, 0px);
-          transform: translate3d(256px, 0px, 0px);
+  -webkit-transform: translate3d(150px, 0px, 0px);
+          transform: translate3d(150px, 0px, 0px);
 }
 
-.toggle-bottun{
-    padding: 5px;
+.toggle-button {
+    padding:0;
+    margin:0;
+    color: #529ecc;
 }

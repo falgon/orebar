@@ -20,7 +20,10 @@
     "clean": "rm -rf node_modules etc"
   },
   "dependencies": {
+    "ajv": "^5.2.2",
+    "ajv-keywords": "^2.1.0",
     "asar": "^0.13.0",
-    "systemjs": "^0.20.18"
+    "systemjs": "^0.20.18",
+    "webpack": "^3.5.6"
   }
 }
