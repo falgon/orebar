@@ -1,6 +1,6 @@
 import * as menubar from 'menubar';
 import * as Electron from 'electron';
-
+import * as tumblrAccess from '../apps/tumblr/acc.js';
 interface execType { (): void };
 
 export class Page {
@@ -29,6 +29,16 @@ export class Page {
 	this.mb.setOption('icon',__dirname + '/../../assets/menubaricon/icon.png');
 	this.mb.on('after-hide', () => { this.mb.app.hide() });
 
+	this.mb.on('after-create-window', () => { 
+	    tumblrAccess.login(
+		async function(tumblrcli:any){
+		    if( tumblrcli === undefined ) return ;
+
+		    const result = await tumblrcli.getDashboardLatest();
+		    //		    this.ipcMain.send
+		}
+	    )
+	});
 	//this.mb.on('after-create-window', () => { this.mb.window.loadURL('http://www.tumblr.com/dashboard'); });
     }
 

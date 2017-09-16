@@ -13,7 +13,7 @@
     "tscwatch": "./node_modules/typescript/bin/tsc --watch -p ./tsconfig.json",
     "webpackwatch": "../build/node_modules/webpack/bin/webpack.js --config ../build/webpack.config.js",
     "clean": "rm -f *.js *.map && find ./src -name \"*.js\" -print -exec rm {} \";\" && find ./src -name \"*.map\" -print -exec rm {} \";\"",
-    "start": "node ../build/scripts/start.js"
+    "start": "../orebar/node_modules/node/bin/node ../build/scripts/start.js"
   },
   "author": "roki <falgon53@yahoo.co.jp>",
   "license": "MIT",
@@ -41,6 +41,7 @@
     "@types/jest": "^20.0.8",
     "@types/menubar": "5.1.5",
     "@types/node": "8.0.27",
+    "@types/opener": "^1.4.0",
     "@types/react": "^16.0.5",
     "@types/react-dom": "^15.5.4",
     "@types/react-icons": "^2.2.2",
@@ -48,7 +49,9 @@
     "electron": "^1.7.6",
     "express": "4.15.4",
     "menubar": "^5.2.3",
+    "node": "^8.3.0",
     "oauth": "0.9.15",
+    "opener": "^1.4.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-icons": "^2.2.5",
@@ -56,6 +59,7 @@
     "slideout": "1.0.1",
     "source-map-loader": "^0.2.1",
     "tumblr": "0.4.1",
+    "tumblr.js": "^1.1.1",
     "typescript": "2.5.2"
   }
 }

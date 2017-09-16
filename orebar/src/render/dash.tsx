@@ -5,8 +5,7 @@ import { Menu } from './components/mainField';
 const Pack = require('../../package.json');
 const menu:[string,string][] = [
     ['Settings','#'],
-    ['About','#'],
-    ['Quit','#']
+    ['About','#']
 ];
 
 ReactDOM.render(
