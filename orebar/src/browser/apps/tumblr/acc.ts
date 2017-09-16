@@ -72,7 +72,7 @@ function getAccessToken(tokens: string, callback:(tumblrcli:any) => void) {
                         tumblrOauthAccessTokenSecret
 		    ];
 
-                    fs.writeFile(tokens, tumblrOauthAccessToken + '\n' + tumblrOauthAccessTokenSecret, function(err) {
+		    fs.writeFile(__dirname + '/' + tokens, tumblrOauthAccessToken + '\n' + tumblrOauthAccessTokenSecret, function(err) {
                         if (err) throw err;
 			console.log("save complete");
 		    });
@@ -86,8 +86,8 @@ function getAccessToken(tokens: string, callback:(tumblrcli:any) => void) {
 export function login(callback: (tumblrcli: any) => void) {
     const tokens: string = 'tokens';
 
-    if (ExistFile.isExistFile(tokens)) {
-        const splitToken: string[] = fs.readFileSync(tokens).toString().split(/\r\n|\r|\n/);;
+    if (ExistFile.isExistFile(__dirname + '/' + tokens)) {
+	const splitToken: string[] = fs.readFileSync(__dirname + '/' + tokens).toString().split(/\r\n|\r|\n/);;
 
         if (splitToken[0] != "" && splitToken[1] != "") {
             tumblrOauthAccessToken = splitToken[0];

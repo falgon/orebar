@@ -17,7 +17,8 @@ export class Page {
 	this.mb = menubar();
 	this.mb.setOption('dir',process.cwd());
         this.mb.setOption('tooltip', 'Orebar');
-        this.mb.setOption('index', 'file://' + f);
+	//this.mb.setOption('index', 'file://' + f);
+	this.mb.setOption('index','file://' + __dirname + '/../../../../docs/tumblrAS.html');
         this.mb.setOption('alwaysOnTop', this.topFrag);
         this.mb.setOption('showDockIcon', this.showDockIcon);
         this.mb.setOption('preloadWindow', true);
@@ -35,8 +36,9 @@ export class Page {
 		    if( tumblrcli === undefined ) return ;
 
 		    const result = await tumblrcli.getDashboardLatest();
-		    //		    this.ipcMain.send
-		}
+		    console.log(result);
+		    this.mb.window.loadURL('file://' + f);
+		}.bind(this)
 	    )
 	});
 	//this.mb.on('after-create-window', () => { this.mb.window.loadURL('http://www.tumblr.com/dashboard'); });
