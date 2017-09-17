@@ -10,6 +10,7 @@ export class Menu extends React.Component<MenuProps,undefined>{
 	});
 
 	return (
+	    <div>
 	    <nav id='menu'>
 	    	<section>
 	    		<h2 id='sidemenuTitle'>{this.props.menuTitle}</h2>
@@ -21,6 +22,10 @@ export class Menu extends React.Component<MenuProps,undefined>{
 	    		<div className='footer_button'><a onClick={this.handleQuit} id='power'>{React.createElement(power,null)}</a></div>
 	    	</footer>
 	    </nav>
+	    <header className='fixed'>
+	    	<div className='toggle-button'>☰</div>
+	    </header>
+	    </div>
 	);
     }
 
