@@ -1,13 +1,13 @@
 const config = {
-    iconPath: __dirname + '/../orebar/node_modules/react-icons'
+    iconPath: __dirname + '/../oreblr/node_modules/react-icons'
 };
 
 module.exports = {
     target: 'electron',
-    entry: '../orebar/src/render/dash.tsx',
+    entry: '../oreblr/src/render/dash.tsx',
     output: {
 	filename: 'main_contents.js',
-	path: __dirname + '/../orebar/src/render'
+	path: __dirname + '/../oreblr/src/render'
     },
     devtool: 'source-map',
     resolve: {

@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-const entryPath = '../orebar/src/render/';
+const entryPath = '../oreblr/src/render/';
 
 module.exports = {
     target: 'electron',

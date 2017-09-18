@@ -1,12 +1,12 @@
-DEPENDENCY = ./orebar
+DEPENDENCY = ./oreblr
 
 all:
-	npm --prefix ./orebar run build
+	npm --prefix ./oreblr run build
 test:
-	npm --prefix ./orebar run test
+	npm --prefix ./oreblr run test
 clean:
-	npm --prefix ./orebar run clean
+	npm --prefix ./oreblr run clean
 	npm --prefix ./build run clean
 run:
-	npm --prefix ./orebar run build
-	npm --prefix ./orebar start
+	npm --prefix ./oreblr run build
+	npm --prefix ./oreblr start

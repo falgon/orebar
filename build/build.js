@@ -4,12 +4,12 @@ Object.defineProperty(exports, '__esModule', {
 });
 const packr = require('electron-packager');
 const os = require('os');
-const pack = require('../orebar/package.json');
+const pack = require('../oreblr/package.json');
 
 function build(plt, arc) {
     var settings = {
         name: pack['name'],
-        dir: __dirname + '/../orebar',
+        dir: __dirname + '/../oreblr',
         out: __dirname + '/dist',
         platform: plt,
         arch: arc,
@@ -21,7 +21,7 @@ function build(plt, arc) {
     };
 
     if (plt === 'win32') {
-        settings['icon'] = '../orebar/src/assets/win32/icon.ico';
+        settings['icon'] = '../oreblr/src/assets/win32/icon.ico';
         settings['version-string'] = {
             CompanyName: 'roki',
             FileDescription: packr['name'],
@@ -30,9 +30,9 @@ function build(plt, arc) {
             InternalName: packr['name']
         };
     } else if (plt === 'darwin') {
-        settings['icon'] = '../orebar/src/assets/darwin/icon.icns';
+        settings['icon'] = '../oreblr/src/assets/darwin/icon.icns';
     } else if (plt == 'linux') {
-	settings['icon'] = '../orebar/src/assets/linux/icon.png';
+	settings['icon'] = '../oreblr/src/assets/linux/icon.png';
     }
 
     console.log('Target platform: ' + plt + '\nArch: ' + arc);

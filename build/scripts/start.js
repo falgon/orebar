@@ -5,7 +5,7 @@ exports.__esModule = true;
 const child_process = require('child_process');
 const os = require('os');
 
-const genend = function (x) { return ' ' + __dirname + '/../dist/orebar-' + os.platform() + '-' + os.arch() + '/orebar.' + x; };
+const genend = function (x) { return ' ' + __dirname + '/../dist/oreblr-' + os.platform() + '-' + os.arch() + '/oreblr.' + x; };
 let cmd = '';
 
 if (os.platform() == 'darwin') {
