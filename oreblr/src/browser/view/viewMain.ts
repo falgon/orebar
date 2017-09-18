@@ -72,7 +72,7 @@ function getAccessToken(event: any) {
                         if (err) throw err;
                         console.log(Pack['name'] + ": Save complete");
                     });
-		    res.sendFile(require('path').resolve(__dirname + '/../../../../docs/tumblrAS.html'));
+		    res.sendFile(require('path').resolve(__dirname + '/../../render/docs/tumblrAS.html'));
 		    const tumblr = new tumblrCli.tumblrCli(oauth);
 		    tumblrData = tumblr;
 		    event.sender.send('authorizeComplete',await tumblr.getDashboardLatest(), tumblr.readLimit);
