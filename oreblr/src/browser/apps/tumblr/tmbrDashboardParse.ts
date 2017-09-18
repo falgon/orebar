@@ -9,10 +9,10 @@ export class tmbrDashboardParse {
     }
 
     public title(entryNum: number): string {
-	return this.limitCheck(entryNum) ? undefined : this.at(entryNum).title;
+        return this.limitCheck(entryNum) ? undefined : this.at(entryNum).title;
     }
     public body(entryNum: number): string {
-	return this.limitCheck(entryNum) ? undefined : this.at(entryNum).body;
+        return this.limitCheck(entryNum) ? undefined : this.at(entryNum).body;
     }
     public postType(entryNum: number): string {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).type;

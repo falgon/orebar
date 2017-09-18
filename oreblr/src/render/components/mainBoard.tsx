@@ -30,16 +30,16 @@ export class MainBoard extends React.Component<any, MainBoardStates> {
 
     private loading() {
         return (
-	    	<div className="centernize">
-	    		<Loader type='square-spin' />
-	    	</div>
-	);
+            <div className="centernize">
+                <Loader type='square-spin' />
+            </div>
+        );
     }
 
     private loaded() {
         return (
-	    	<div><h2>Section</h2><p>{this.state.data}</p></div>
-	);
+            <div><h2>Section</h2><p>{this.state.data}</p></div>
+        );
     }
 
     private displayMain() {
@@ -48,11 +48,11 @@ export class MainBoard extends React.Component<any, MainBoardStates> {
 
     public render() {
         return (
-	    <main id='panel'>
-	    	<section>
-	    		{this.displayMain()}
-	    	</section>
-	    </main>
-	);
+            <main id='panel'>
+                <section>
+                    {this.displayMain()}
+                </section>
+            </main>
+        );
     }
 }

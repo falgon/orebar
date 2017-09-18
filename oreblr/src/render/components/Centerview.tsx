@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Grid, Row, Col} from 'react-bootstrap';
+import { Grid, Row, Col } from 'react-bootstrap';
 
 export class Centerview extends React.Component<any, any> {
     render() {

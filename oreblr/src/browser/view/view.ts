@@ -11,31 +11,31 @@ export class Page {
 
     constructor(f: string) {
         this.topFrag = false;
-	this.showDockIcon = false;
-	this.ipcMain = Electron.ipcMain;
+        this.showDockIcon = false;
+        this.ipcMain = Electron.ipcMain;
 
-	this.mb = menubar();
-	this.mb.setOption('dir',process.cwd());
+        this.mb = menubar();
+        this.mb.setOption('dir', process.cwd());
         this.mb.setOption('tooltip', Pack['name']);
-	this.mb.setOption('index','file://' + __dirname + '/../../render/docs/tumblrAS.html');
+        this.mb.setOption('index', 'file://' + __dirname + '/../../render/docs/tumblrAS.html');
         this.mb.setOption('alwaysOnTop', this.topFrag);
         this.mb.setOption('showDockIcon', this.showDockIcon);
         this.mb.setOption('preloadWindow', true);
-	this.mb.setOption('width',600);
-	this.mb.setOption('height',400);
-	this.mb.setOption('minWidth',600);
-	this.mb.setOption('minHeight',400);
+        this.mb.setOption('width', 600);
+        this.mb.setOption('height', 400);
+        this.mb.setOption('minWidth', 600);
+        this.mb.setOption('minHeight', 400);
 
-	this.mb.setOption('icon', __dirname + '/../../assets/menubaricon/icon.png');
-	this.mb.on('after-hide', () => { this.mb.app.hide() });
+        this.mb.setOption('icon', __dirname + '/../../assets/menubaricon/icon.png');
+        this.mb.on('after-hide', () => { this.mb.app.hide() });
 
-	this.mb.on('after-create-window', () => { this.mb.window.loadURL('file://' + f); });
+        this.mb.on('after-create-window', () => { this.mb.window.loadURL('file://' + f); });
     }
 
-    downloadURL(url:string):void{
-	this.mb.window.webContents.downloadURL(url);
+    downloadURL(url: string): void {
+        this.mb.window.webContents.downloadURL(url);
     }
-    
+
     get app() {
         return this.mb.app;
     }

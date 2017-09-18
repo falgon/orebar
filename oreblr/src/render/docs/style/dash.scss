@@ -2,8 +2,8 @@ $theme_color: #36465d;
 $sidemenu_padding: 150px;
 $sidemenu_delay: 350ms;
 
-::selection { 
-  background: $theme_color;
+::selection {
+    background: $theme_color;
 }
 
 * {
@@ -12,84 +12,84 @@ $sidemenu_delay: 350ms;
 }
 
 .slideout-menu {
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 0;
-  width: $sidemenu_padding;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 0;
+    width: $sidemenu_padding;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: none;
 }
 
 .slideout-panel {
-  position: relative;
-  z-index: 1;
-  will-change: transform;
+    position: relative;
+    z-index: 1;
+    will-change: transform;
 }
 
 .slideout-open,
 .slideout-open body,
 .slideout-open .slideout-panel {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 .slideout-open .slideout-menu {
-  display: block;
+    display: block;
 }
 
 html,
 body {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 nav {
-  background: #eee;
-  color: #555555;
+    background: #eee;
+    color: #555555;
 }
 
 main {
-  width:100%;
-  height:100%;
-  background: $theme_color;
-  box-shadow:-10px 0px 31px 2px #9e9e9e;
-  -moz-box-shadow:-10px 0px 31px 2px #9e9e9e;
-  -webkit-box-shadow:-10px 0px 31px 2px #9e9e9e;
+    width: 100%;
+    height: 100%;
+    background: $theme_color;
+    box-shadow: -10px 0px 31px 2px #9e9e9e;
+    -moz-box-shadow: -10px 0px 31px 2px #9e9e9e;
+    -webkit-box-shadow: -10px 0px 31px 2px #9e9e9e;
 
-  color: #fff;
-  min-height: 100%;
-  padding: 3rem 4rem;
+    color: #fff;
+    min-height: 100%;
+    padding: 3rem 4rem;
 }
 
 header {
-  padding: 1rem;
-  position: fixed;
-  width: 100%;
-  z-index: 10;
+    padding: 1rem;
+    position: fixed;
+    width: 100%;
+    z-index: 10;
 }
 
 .fixed {
-  -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-  position: fixed;
-  z-index: 2;
-  -webkit-transition: -webkit-transform $sidemenu_delay ease;
-  transition: -webkit-transform $sidemenu_delay ease;
-  transition: transform $sidemenu_delay ease;
-  transition: transform $sidemenu_delay ease, -webkit-transform $sidemenu_delay ease;
-  width:25px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    position: fixed;
+    z-index: 2;
+    -webkit-transition: -webkit-transform $sidemenu_delay ease;
+    transition: -webkit-transform $sidemenu_delay ease;
+    transition: transform $sidemenu_delay ease;
+    transition: transform $sidemenu_delay ease, -webkit-transform $sidemenu_delay ease;
+    width: 25px;
 }
 
 .fixed-open {
-  -webkit-transform: translate3d($sidemenu_padding, 0px, 0px);
-          transform: translate3d($sidemenu_padding, 0px, 0px);
+    -webkit-transform: translate3d($sidemenu_padding, 0px, 0px);
+    transform: translate3d($sidemenu_padding, 0px, 0px);
 }
 
 .toggle-button {
-    padding:0;
-    margin:0;
+    padding: 0;
+    margin: 0;
     color: #529ecc;
 }

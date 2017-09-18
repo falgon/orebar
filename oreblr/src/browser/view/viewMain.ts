@@ -45,8 +45,8 @@ function getAccessToken(event: any) {
     });
 
     const server = http.createServer(app).listen(app.get('port'), () => {
-	console.log('Listening on port ' + app.get('port'));
-	opener('http://localhost:3000');
+        console.log('Listening on port ' + app.get('port'));
+        opener('http://localhost:3000');
     });
     server.on('connection', (sock: any) => { sock.unref(); });
 
@@ -56,7 +56,7 @@ function getAccessToken(event: any) {
             oauthRequestToken,
             oauthRequestTokenSecret,
             req.query.oauth_verifier,
-            async function (error: boolean, AccessToken: any, AccessTokenSecret: any) {
+            async function(error: boolean, AccessToken: any, AccessTokenSecret: any) {
                 if (error) {
                     res.send("Error getting OAuth access token: " + error, 500);
                     return;
@@ -72,12 +72,12 @@ function getAccessToken(event: any) {
                         if (err) throw err;
                         console.log(Pack['name'] + ": Save complete");
                     });
-		    res.sendFile(require('path').resolve(__dirname + '/../../render/docs/tumblrAS.html'));
-		    const tumblr = new tumblrCli.tumblrCli(oauth);
+                    res.sendFile(require('path').resolve(__dirname + '/../../render/docs/tumblrAS.html'));
+                    const tumblr = new tumblrCli.tumblrCli(oauth);
 
-		    tumblrData = tumblr;
-		    event.sender.send('authorizeComplete',await tumblr.getDashboardLatest(), tumblr.readLimit);
-		    console.log(Pack['name'] + ': Authorize succeed');
+                    tumblrData = tumblr;
+                    event.sender.send('authorizeComplete', await tumblr.getDashboardLatest(), tumblr.readLimit);
+                    console.log(Pack['name'] + ': Authorize succeed');
                 }
             }
         );
@@ -86,22 +86,22 @@ function getAccessToken(event: any) {
 
 async function login(event: any) {
     if (ExistFile.isExistFile(__dirname + '/' + TOKENS_FILE)) {
-	console.log(Pack['name'] + ': Found AccessToken...');
+        console.log(Pack['name'] + ': Found AccessToken...');
         const splitToken: string[] = fs.readFileSync(__dirname + '/' + TOKENS_FILE).toString().split(/\r\n|\r|\n/);;
 
-	if (splitToken[0] != "" && splitToken[1] != "") {
-	    console.log(Pack['name'] + ': Authorize...');
-	    const tumblr = new tumblrCli.tumblrCli([CONSUMER_KEY, CONSUMER_SECRET, splitToken[0], splitToken[1]]);
-	    tumblrData = tumblr;
+        if (splitToken[0] != "" && splitToken[1] != "") {
+            console.log(Pack['name'] + ': Authorize...');
+            const tumblr = new tumblrCli.tumblrCli([CONSUMER_KEY, CONSUMER_SECRET, splitToken[0], splitToken[1]]);
+            tumblrData = tumblr;
 
-	    event.sender.send('authorizeComplete', await tumblr.getDashboardLatest(), tumblr.readLimit);
-	    console.log(Pack['name'] + ': Authorize succeed');
-	} else {
-	    console.log(Pack['name'] + ': ill-formed, getting access token...');
-	    getAccessToken(event);
-	}
+            event.sender.send('authorizeComplete', await tumblr.getDashboardLatest(), tumblr.readLimit);
+            console.log(Pack['name'] + ': Authorize succeed');
+        } else {
+            console.log(Pack['name'] + ': ill-formed, getting access token...');
+            getAccessToken(event);
+        }
     } else {
-	console.log(Pack['name'] + ': Not Found AccessToken, create new access token...');
+        console.log(Pack['name'] + ': Not Found AccessToken, create new access token...');
         getAccessToken(event);
     }
 }
