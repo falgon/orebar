@@ -11,7 +11,7 @@ const menu:[string,string][] = [
 
 ReactDOM.render(
     <div>
-    	<Menu menuTitle={Pack['name']} list={menu} />
+   	<Menu menuTitle={Pack['name']} list={menu} />
     	<MainBoard />
     </div>,
     document.getElementById('mainMenu')

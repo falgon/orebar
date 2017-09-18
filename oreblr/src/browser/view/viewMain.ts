@@ -45,8 +45,8 @@ function getAccessToken(event: any) {
     });
 
     const server = http.createServer(app).listen(app.get('port'), () => {
-        console.log('Listening on port ' + app.get('port'));
-        opener('http://localhost:3000');
+	console.log('Listening on port ' + app.get('port'));
+	opener('http://localhost:3000');
     });
     server.on('connection', (sock: any) => { sock.unref(); });
 
@@ -74,6 +74,7 @@ function getAccessToken(event: any) {
                     });
 		    res.sendFile(require('path').resolve(__dirname + '/../../render/docs/tumblrAS.html'));
 		    const tumblr = new tumblrCli.tumblrCli(oauth);
+
 		    tumblrData = tumblr;
 		    event.sender.send('authorizeComplete',await tumblr.getDashboardLatest(), tumblr.readLimit);
 		    console.log(Pack['name'] + ': Authorize succeed');
@@ -92,6 +93,7 @@ async function login(event: any) {
 	    console.log(Pack['name'] + ': Authorize...');
 	    const tumblr = new tumblrCli.tumblrCli([CONSUMER_KEY, CONSUMER_SECRET, splitToken[0], splitToken[1]]);
 	    tumblrData = tumblr;
+
 	    event.sender.send('authorizeComplete', await tumblr.getDashboardLatest(), tumblr.readLimit);
 	    console.log(Pack['name'] + ': Authorize succeed');
 	} else {

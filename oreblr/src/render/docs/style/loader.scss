@@ -1,0 +1,22 @@
+$primary-color: #fff;
+@import '../../../../node_modules/loaders.css/src/animations/square-spin.scss';
+
+.loader-hidden {
+    display: none;
+}
+
+.loader-active {
+    display: block;
+}
+
+.centernize{
+    //position:absolute;
+    //display: flex;
+    //justify-content: center;
+ 
+   //align-items: center;
+
+    margin: 0 auto;
+    height:20px;
+    width:20px;
+}
