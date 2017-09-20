@@ -1,6 +1,7 @@
 import * as menubar from 'menubar';
 import * as Electron from 'electron';
 import * as makeKeyFromHTMLPath from '../utility/makeKeyFromHTMLPath';
+import { menu } from '../../render/menu';
 const Pack = require('../../../package.json');
 interface execType { (): void };
 
@@ -31,13 +32,15 @@ export class Page {
         this.mb.setOption('width', 600);
         this.mb.setOption('height', 400);
         this.mb.setOption('minWidth', 600);
-        this.mb.setOption('minHeight', 400);
+	this.mb.setOption('minHeight', 400);
+	//this.mb.setOption('resizable', false); // will implementing
+	this.mb.setOption('movable', false);
 
         this.mb.setOption('icon', __dirname + '/../../assets/menubaricon/icon.png');
         this.mb.on('after-hide', function() { this.mb.app.hide() }.bind(this));
         this.mb.on('after-create-window', function() {
             this.loadURL('file://' + f);
-            this.nowOpenItemData = 'Dashboard';
+	    this.nowOpenItemData = menu[0];
         }.bind(this));
     }
 

@@ -8,3 +8,4 @@ npm-debug.log
 tokens
 *.asar
 tokens
+.test.ts

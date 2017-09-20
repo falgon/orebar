@@ -89,7 +89,7 @@ function getAccessToken(event: any) {
 async function login(event: any) {
     if (ExistFile.isExistFile(__dirname + '/' + TOKENS_FILE)) {
         console.log(Pack['name'] + ': Found AccessToken...');
-        const splitToken: string[] = fs.readFileSync(__dirname + '/' + TOKENS_FILE).toString().split(/\r\n|\r|\n/);;
+        const splitToken: string[] = fs.readFileSync(__dirname + '/' + TOKENS_FILE).toString().split(/\r\n|\r|\n/);
 
         if (splitToken[0] != "" && splitToken[1] != "") {
             console.log(Pack['name'] + ': Authorize...');
@@ -108,11 +108,29 @@ async function login(event: any) {
     }
 }
 
-function loadOtherItem(Item: string, view: any, event: any) {
+async function loadOtherItem(Item: string, view: any, event: any) {
     if (view.nowOpenItem !== Item) {
         console.log(Pack['name'] + ': Load ' + Item);
-        view.nowOpenItem = Item;
-        event.sender.send(Item);
+	view.nowOpenItem = Item;
+
+	if(Item === menu[0]) {
+	    event.sender.send(Item, await tumblrData.getDashboardLatest(), tumblrData.readLimit);
+	} else if (Item === menu[1]) {
+	    //console.log('HO!');
+	    event.sender.send(Item, await tumblrData.getLikes(), tumblrData.readLimit);
+	} else if (Item === menu[2]) {
+	    // follows
+	} else if (Item === menu[3]) {
+	    // MyBlogs
+	} else if (Item === menu[4]) {
+	    // Popular
+	} else if (Item === menu[5]) {
+	    // Settings
+	} else if (Item === menu[6]) {
+	    // About
+	} else {
+	    
+	}
     }
 };
 

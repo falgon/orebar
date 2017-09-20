@@ -8,46 +8,78 @@ require('../docs/style/dash.scss');
 require('../docs/style/sidemenu.scss');
 
 interface MainBoardStates {
-    blogNames?: any;
     menuStatus?: string;
     is_authorized?: boolean;
 }
 
 export class MainBoard extends React.Component<any, MainBoardStates> {
+    private articles: JSX.Element;
+
     constructor(props: any) {
         super(props);
 
-        this.state = { blogNames: this.props.defaultValue, menuStatus: 'Dashboard', is_authorized: false };
+        this.state = { menuStatus: menu[0], is_authorized: false };
 
         ipcRenderer.send('tumblrAuthorization');
-        ipcRenderer.on('authorizeComplete', (_: any, tmbr: any, limit: number) => {
+        ipcRenderer.on('authorizeComplete', function(_: any, tmbr: any, limit: number) {
             ipcRenderer.removeAllListeners('authorizeComplete');
-
-            const titles = this.getBlogTitles(tmbr, limit);
-            this.setState({ blogNames: titles, is_authorized: true });
-        });
+	    this.articles = this.getBlogArticles(tmbr, limit)
+	    this.setState({ is_authorized: true });
+        }.bind(this));
 
         for (let item of menu) {
-            ipcRenderer.on(item, () => {
+            ipcRenderer.on(item, function (_: any, tmbr: any, limit: number) { // load another dashbord items...
+		this.articles = this.getBlogArticles(tmbr, limit);
                 this.setState({ menuStatus: item });
-            });
+            }.bind(this));
         }
     }
 
-    private getBlogTitles(tmbr: any, limit: any) {
+    public getBlogArticles(tmbr: any, limit: any) {
         const tmbrParse = new TumblrParser.tmbrDashboardParse(tmbr, limit);
 
-        let tmp: string[] = [];
-        for (let i = 0; i < limit; ++i) {
-            tmp.push(tmbrParse.blogName(i));
+        let tmp: [string, any][] = [];
+        
+	for (let i = 0; i < limit; ++i) {
+	    if(tmbrParse.postType(i) === 'photo') {
+	    	tmp.push([tmbrParse.postType(i), tmbrParse.original_image(i)]);
+	    } else if (tmbrParse.postType(i) === 'text') {
+		tmp.push([tmbrParse.postType(i), tmbrParse.body(i)]);
+	    } else if (tmbrParse.postType(i) === 'quote') {
+	    	
+	    } else if (tmbrParse.postType(i) === 'link') {
+	    
+	    } else if (tmbrParse.postType(i) === 'chat') {
+	    
+	    } else if (tmbrParse.postType(i) === 'audio') {
+	    
+	    } else if (tmbrParse.postType(i) === 'video') {
+	    
+	    }
         }
-        return tmp.map((item: string) => {
-            return <li>{item}</li>
-        });
+
+	return (
+	    <div id='photos'>
+	    	{
+		    tmp.map((item: [string, any]) => {
+	    		if(item[0] === 'photo') {
+				return <img className='dashPhoto' src={item[1].url} />;
+	    		} else if (item[0] === 'text') {
+				return <p className='textPhoto'>{item[1]}</p>;
+	    		} else if (item[0] === 'quote') {
+	    		} else if (item[0] === 'link') {
+	    		} else if (item[0] === 'chat') {
+	    		} else if (item[0] === 'audio') {
+	    		} else if (item[0] === 'video') {
+			}
+		    })
+		}
+	    </div>
+	);
     }
 
     public componentDidMount() {
-        this.setState({ blogNames: 'Waiting authorization...' });
+	this.articles = undefined;
     }
 
     private loading() {
@@ -59,50 +91,51 @@ export class MainBoard extends React.Component<any, MainBoardStates> {
     }
 
     private loaded() {
-        if (this.state.menuStatus === menu[0]) {
+        if (this.state.menuStatus === menu[0]) { // Dashboard
+            return (
+		<div>
+		    {this.articles}
+		</div>
+	    );
+        } else if (this.state.menuStatus === menu[1]) { // Likes
             return (
                 <div>
-                    <h2>Section</h2>
-                    <ul>{this.state.blogNames}</ul>
+                    {this.articles}
                 </div>
             );
-        } else if (this.state.menuStatus === menu[1]) {
+        } else if (this.state.menuStatus === menu[2]) { // Follows
             return (
                 <div>
-                    <h2>Likes Section</h2>
-                    <ul>{this.state.blogNames}</ul>
+		    <h2>{menu[2]} Section</h2>
+                    {this.articles}
                 </div>
             );
-        } else if (this.state.menuStatus === menu[2]) {
-            return (
-                <div>
-                    <h2>Follows Section</h2>
-                    <ul>{this.state.blogNames}</ul>
-                </div>
-            );
-        } else if (this.state.menuStatus === menu[3]) {
+        } else if (this.state.menuStatus === menu[3]) { // MyBlogs
             return (
                 <div>
                     <h2>MyBlogs Section</h2>
-                    <ul>{this.state.blogNames}</ul>
+		    <p>{this.articles}</p>
                 </div>
             );
-        } else if (this.state.menuStatus === menu[4]) {
+        } else if (this.state.menuStatus === menu[4]) { // Popular
             return (
                 <div>
-                    <h2>Popular Section</h2><ul>{this.state.blogNames}</ul>
+                    <h2>Popular Section</h2>
+		    <p>{this.articles}</p>
                 </div>
             );
-        } else if (this.state.menuStatus === menu[5]) {
+        } else if (this.state.menuStatus === menu[5]) { // Settings
             return (
                 <div>
-                    <h2>Settings Section</h2><ul>{this.state.blogNames}</ul>
+                    <h2>Settings Section</h2>
+		    <p>{this.articles}</p>
                 </div>
             );
-        } else if (this.state.menuStatus === menu[6]) {
+        } else if (this.state.menuStatus === menu[6]) { // About
             return (
                 <div>
-                    <h2>About Section</h2><ul>{this.state.blogNames}</ul>
+                    <h2>About Section</h2>
+		    <p>{this.articles}</p>
                 </div>
             );
         }

@@ -83,7 +83,7 @@ export class tmbrDashboardParse {
     public image_permalink(entryNum: number): string {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).image_permalink;
     }
-    public photos(entryNum: number): [Object] {
+    public photos(entryNum: number) {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).photos;
     }
     public can_like(entryNum: number): boolean {
@@ -101,4 +101,19 @@ export class tmbrDashboardParse {
     public display_avatar(entryNum: number): boolean {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).display_avatar;
     }
+    public original_image(entryNum: number): ImageProper {
+	return this.limitCheck(entryNum) ? undefined : 
+	    {
+		url: this.photos(entryNum)[0].original_size.url, 
+		width: this.photos(entryNum)[0].original_size.width,
+		height: this.photos(entryNum)[0].original_size.width
+	    };
+    }
 }
+
+interface ImageProper {
+    url: string;
+    width: number;
+    height: number;
+}
+    

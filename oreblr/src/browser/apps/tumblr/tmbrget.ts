@@ -2,6 +2,7 @@ const tumblr = require('tumblr.js');
 
 export class tumblrCli {
     private client: any = undefined;
+    private fav_read_pos: number = 0;
 
     constructor(oauth: any, private read_limit: number = 20, private read_pos: number = 0) {
         this.client = tumblr.createClient({
@@ -10,7 +11,8 @@ export class tumblrCli {
             token: oauth[2],
             token_secret: oauth[3]
         });
-        this.client.returnPromises();
+	this.client.returnPromises();
+	this.fav_read_pos = 0;
     }
 
     public getUserInfo() {
@@ -49,6 +51,13 @@ export class tumblrCli {
             if (!err) this.read_pos += readSize;
         }.bind(this));
     }
+
+    public getLikes() {
+	return this.client.userLikes({ limit: this.read_limit }, function(err: any, _:any): void {
+	    if(!err) this.fav_read_pos = this.read_limit;
+	}.bind(this));
+    }
+
 
     get readPos(): number {
         return this.read_pos;
