@@ -1,25 +1,58 @@
 import * as React from 'react';
 import { ipcRenderer } from 'electron';
-const power = require('react-icons/lib/fa/power-off');
 
-export interface MenuProps { menuTitle: string; list: [string, string][]; }
+export interface MenuProps {
+    menuTitle: string;
+    list: string[];
+}
+
 export class Menu extends React.Component<MenuProps, undefined>{
-    render() {
-        const liTag = this.props.list.map(function(item) {
-            return <li id='sidemenuItem'><a href={item[1]}>{item[0]}</a></li>
-        });
+    constructor(props: MenuProps) {
+        super(props);
+    }
 
+    render() {
         return (
             <div>
                 <nav id='menu'>
                     <section>
                         <h2 id='sidemenuTitle'>{this.props.menuTitle}</h2>
                         <ul id='sidemenu'>
-                            {liTag}
+                            {
+                                this.props.list.map((item) => {
+                                    return (
+                                        <li id='sidemenuItem'>
+                                            <div onClick={() => { ipcRenderer.send(item) }} id={item}>{item}</div>
+                                        </li>
+                                    )
+                                })
+                            }
                         </ul>
                     </section>
                     <footer>
-                        <div className='footer_button'><a onClick={this.handleQuit} id='power'>{React.createElement(power, null)}</a></div>
+                        <ul>
+                            <li>
+                                <div className='footer_button'>
+                                    <a onClick={() => { ipcRenderer.send('clicked_quit') }} id='power'>
+                                        {React.createElement(require('react-icons/lib/fa/power-off'), null)}
+                                    </a>
+                                </div>
+                            </li>
+                            <li>
+                                <div className='footer_button'>
+                                    <a onClick={() => { ipcRenderer.send('clicked_info') }} id='info'>
+                                        {React.createElement(require('react-icons/lib/fa/info-circle'), null)}
+                                    </a>
+                                </div>
+                            </li>
+                            <li>
+                                <div className='footer_button'>
+                                    <a onClick={() => { ipcRenderer.send('clicked_something') }} id='something'>
+                                        {React.createElement(require('react-icons/lib/fa/angle-up'), null)}
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
                     </footer>
                 </nav>
                 <header className='fixed'>
@@ -27,9 +60,5 @@ export class Menu extends React.Component<MenuProps, undefined>{
                 </header>
             </div>
         );
-    }
-
-    handleQuit(): void {
-        ipcRenderer.send('clicked_quit');
     }
 }

@@ -5,6 +5,8 @@ import * as fs from 'fs';
 import * as ExistFile from '../utility/isexist';
 import * as http from 'http';
 import * as tumblrCli from '../apps/tumblr/tmbrget';
+import { menu } from '../../render/menu';
+
 import opener = require('opener');
 
 let tumblrData: any = undefined;
@@ -106,10 +108,18 @@ async function login(event: any) {
     }
 }
 
-export function browser_main(): void {
+function loadOtherItem(Item: string, view: any, event: any) {
+    if (view.nowOpenItem !== Item) {
+        console.log(Pack['name'] + ': Load ' + Item);
+        view.nowOpenItem = Item;
+        event.sender.send(Item);
+    }
+};
+
+export function browser_main() {
     let view = new Viewmodule.Page(__dirname + '/../../render/docs/dash.html');
 
-    view.mb.on('ready', function(): void {
+    view.mb.on('ready', () => {
         console.log(Pack['name'] + ': Ready');
     });
 
@@ -117,6 +127,13 @@ export function browser_main(): void {
         console.log(Pack['name'] + ': Bye!');
         view.mb.app.quit();
     });
+
+
+    for (let item of menu) {
+        view.ipcMain.on(item, (event: any) => {
+            loadOtherItem(item, view, event);
+        });
+    }
 
     view.ipcMain.on('tumblrAuthorization', login);
 }

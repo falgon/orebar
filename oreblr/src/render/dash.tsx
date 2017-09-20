@@ -2,12 +2,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Menu } from './components/mainField';
 import { MainBoard } from './components/mainBoard';
+import { menu } from './menu'
 
 const Pack = require('../../package.json');
-const menu: [string, string][] = [
-    ['Settings', '#'],
-    ['About', '#']
-];
 
 ReactDOM.render(
     <div>

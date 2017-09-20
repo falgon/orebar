@@ -1,5 +1,6 @@
 import * as menubar from 'menubar';
 import * as Electron from 'electron';
+import * as makeKeyFromHTMLPath from '../utility/makeKeyFromHTMLPath';
 const Pack = require('../../../package.json');
 interface execType { (): void };
 
@@ -8,6 +9,7 @@ export class Page {
     private topFrag: boolean;
     private showDockIcon: boolean;
     private ipcMain: NodeJS.EventEmitter;
+    private nowOpenItemData: string = undefined;
 
     constructor(f: string) {
         this.topFrag = false;
@@ -17,23 +19,43 @@ export class Page {
         this.mb = menubar();
         this.mb.setOption('dir', process.cwd());
         this.mb.setOption('tooltip', Pack['name']);
-        this.mb.setOption('index', 'file://' + __dirname + '/../../render/docs/tumblrAS.html');
+
+        let firsturi: string = 'file://' + __dirname + '/../../render/docs/tumblrAS.html';
+        this.nowOpenItemData = makeKeyFromHTMLPath.makeKeyFromHTMLPath(firsturi);
+        this.mb.setOption('index', firsturi);
+
         this.mb.setOption('alwaysOnTop', this.topFrag);
         this.mb.setOption('showDockIcon', this.showDockIcon);
         this.mb.setOption('preloadWindow', true);
+        this.mb.setOption('backgroundColor', '#36465d');
         this.mb.setOption('width', 600);
         this.mb.setOption('height', 400);
         this.mb.setOption('minWidth', 600);
         this.mb.setOption('minHeight', 400);
 
         this.mb.setOption('icon', __dirname + '/../../assets/menubaricon/icon.png');
-        this.mb.on('after-hide', () => { this.mb.app.hide() });
+        this.mb.on('after-hide', function() { this.mb.app.hide() }.bind(this));
+        this.mb.on('after-create-window', function() {
+            this.loadURL('file://' + f);
+            this.nowOpenItemData = 'Dashboard';
+        }.bind(this));
+    }
 
-        this.mb.on('after-create-window', () => { this.mb.window.loadURL('file://' + f); });
+    public loadURL(uri: string, Key: string) {
+        this.mb.window.loadURL(uri);
+        this.nowOpenItemData = Key;
     }
 
     downloadURL(url: string): void {
         this.mb.window.webContents.downloadURL(url);
+    }
+
+    set nowOpenItem(data: string) {
+        this.nowOpenItemData = data;
+    }
+
+    get nowOpenItem() {
+        return this.nowOpenItemData;
     }
 
     get app() {

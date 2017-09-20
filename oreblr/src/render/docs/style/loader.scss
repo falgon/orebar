@@ -7,14 +7,13 @@ $primary-color: #fff;
 
 .loader-active {
     display: block;
+    flex: none;
+    max-width: 50%;
 }
 
 .centernize {
-    //position:absolute;
-    //display: flex;
-    //justify-content: center;
-    //align-items: center;
-    margin: 0 auto;
-    height: 20px;
-    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20em;
 }
