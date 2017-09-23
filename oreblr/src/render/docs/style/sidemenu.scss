@@ -10,7 +10,7 @@
     0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
-#sidemenuItem {
+.sidemenuItem {
     cursor: pointer;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -100,7 +100,7 @@ footer {
 
 #power,
 #info,
-#something {
+#reload {
     display: block;
     color: #eee;
     width: 100%;
@@ -128,7 +128,7 @@ footer {
 }
 
 #info,
-#something {
+#reload {
     background-color: $point_color;
     color: $mainFont_color;
 }

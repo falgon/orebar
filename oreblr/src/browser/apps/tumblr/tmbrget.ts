@@ -3,9 +3,8 @@ const tumblr = require('tumblr.js');
 
 export class tumblrCli {
     private client: tumblr.Client = undefined;
-    private fav_read_pos: number = 0;
 
-    constructor(oauth: any, private read_limit: number = 20, private read_pos: number = 0) {
+    constructor(oauth: any, private read_limit: number = 20, private read_pos: number = 0, private fav_read_pos: number = 0, private follow_read_pos: number = 0) {
         this.client = tumblr.createClient({
             consumer_key: oauth[0],
             consumer_secret: oauth[1],
@@ -56,8 +55,15 @@ export class tumblrCli {
     public getLikes() {
         return this.client.userLikes({ limit: this.read_limit }, (err: Error, _: string, __: string) => {
             if (!err) this.fav_read_pos = this.read_limit;
-        })
+        });
     }
+
+    public getFollowing() {
+	return this.client.userFollowing({ limit: this.read_limit }, (err: Error, _:string, __: string) => {
+	    if (!err) this.follow_read_pos = this.read_limit;
+	});
+    }
+
 
     get readPos(): number {
         return this.read_pos;

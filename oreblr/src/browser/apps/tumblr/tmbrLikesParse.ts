@@ -1,18 +1,21 @@
 /// <refernce path='./tumblr.d.ts' />
 
-export class tmbrDashboardParse {
+export class tmbrLikesParse {
     constructor(private postData: any, private limit: number) { }
 
     private limitCheck(n: number): boolean {
         return n >= this.limit;
     }
     private at(index: number) {
-        return this.postData.posts[index];
+        return this.postData.liked_posts[index];
     }
     get readLimit(): number {
 	return this.limit;
     }
 
+    public liked_count(): number {
+	return this.postData.liked_count;
+    }
     public title(entryNum: number): string {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).title;
     }

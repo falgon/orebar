@@ -17,16 +17,16 @@ export class Menu extends React.Component<MenuProps, undefined>{
                 <nav id='menu'>
                     <section>
                         <h2 id='sidemenuTitle'>{this.props.menuTitle}</h2>
-                        <ul id='sidemenu'>
+                        <ul id='sidemenu'>	
                             {
                                 this.props.list.map((item) => {
                                     return (
-                                        <li id='sidemenuItem'>
+                                        <li className='sidemenuItem'>
                                             <div onClick={() => { ipcRenderer.send(item) }} id={item}>{item}</div>
                                         </li>
                                     )
                                 })
-                            }
+			    }
                         </ul>
                     </section>
                     <footer>
@@ -47,7 +47,7 @@ export class Menu extends React.Component<MenuProps, undefined>{
                             </li>
                             <li>
                                 <div className='footer_button'>
-                                    <a onClick={() => { ipcRenderer.send('clicked_something') }} id='something'>
+                                    <a onClick={() => { ipcRenderer.send('clicked_reload') }} id='reload'>
                                         {React.createElement(require('react-icons/lib/fa/angle-up'), null)}
                                     </a>
                                 </div>
