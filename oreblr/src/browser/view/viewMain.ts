@@ -1,28 +1,27 @@
-const Viewmodule = require('./view.js');
-const Pack = require('../../../package.json');
+import * as Viewmodule from './view';
 import * as express from 'express';
 import * as fs from 'fs';
 import * as ExistFile from '../utility/isexist';
 import * as http from 'http';
 import * as tumblrCli from '../apps/tumblr/tmbrget';
+import { Socket } from 'net';
 import { menu } from '../../render/menu';
-
+import { name } from '../../../package.json';
 import opener = require('opener');
 
 let tumblrData: any = undefined;
-
 const CONSUMER_KEY: string = 'WJbL4DpsB167XaNdeCOQx3TWLsxKJreORvWXEYrBufByLODynM';
 const CONSUMER_SECRET: string = 'FFNVTRT1xc0vuCr103mjHxkFs0qCnqYEaMUr67lVtf6nRhoRtg';
 const TOKENS_FILE: string = 'tokens';
 
 function getAccessToken(event: any) {
-    let app = express();
-    let oauthRequestToken: any = undefined, oauthRequestTokenSecret: any = undefined;
+    let app: express.Application = express();
+    let oauthRequestToken: string = undefined, oauthRequestTokenSecret: string = undefined;
 
     app.set('port', process.env.PORT || 3000);
 
     const oauth = require('oauth');
-    let consumer: any = new oauth.OAuth(
+    let consumer: typeof oauth.OAuth = new oauth.OAuth(
         "http://www.tumblr.com/oauth/request_token",
         "http://www.tumblr.com/oauth/access_token",
         CONSUMER_KEY,
@@ -32,10 +31,10 @@ function getAccessToken(event: any) {
         "HMAC-SHA1"
     );
 
-    app.get('/', (_: any, res: any) => {
-        consumer.getOAuthRequestToken((error: boolean, oauthToken: any, oauthTokenSecret: any) => {
-            if (error) {
-                res.send("Error getting OAuth request token: " + error, 500);
+    app.get('/', (_: any, res: express.Response) => {
+        consumer.getOAuthRequestToken((err: Error, oauthToken: string, oauthTokenSecret: string) => {
+            if (err) {
+                res.send("Error getting OAuth request token: " + err);
                 return;
             } else {
                 oauthRequestToken = oauthToken;
@@ -50,36 +49,36 @@ function getAccessToken(event: any) {
         console.log('Listening on port ' + app.get('port'));
         opener('http://localhost:3000');
     });
-    server.on('connection', (sock: any) => { sock.unref(); });
+    server.on('connection', (sock: Socket) => { sock.unref() });
 
 
-    app.get('/auth/callback', (req: any, res: any) => {
+    app.get('/auth/callback', (req: express.Request, res: express.Response) => {
         consumer.getOAuthAccessToken(
             oauthRequestToken,
             oauthRequestTokenSecret,
             req.query.oauth_verifier,
-            async function(error: boolean, AccessToken: any, AccessTokenSecret: any) {
-                if (error) {
-                    res.send("Error getting OAuth access token: " + error, 500);
+            async function(err: Error, AccessToken: string, AccessTokenSecret: string) {
+                if (err) {
+                    res.send("Error getting OAuth access token: " + err);
                     return;
                 } else {
-                    const oauth: any[] = [
+                    const oauth: string[] = [
                         CONSUMER_KEY,
                         CONSUMER_SECRET,
                         AccessToken,
                         AccessTokenSecret
                     ];
 
-                    fs.writeFile(__dirname + '/' + TOKENS_FILE, AccessToken + '\n' + AccessTokenSecret, (err: any) => {
+                    fs.writeFile(__dirname + '/' + TOKENS_FILE, AccessToken + '\n' + AccessTokenSecret, (err: Error) => {
                         if (err) throw err;
-                        console.log(Pack['name'] + ": Save complete");
+                        console.log(name + ": Save complete");
                     });
                     res.sendFile(require('path').resolve(__dirname + '/../../render/docs/tumblrAS.html'));
-                    const tumblr = new tumblrCli.tumblrCli(oauth);
+                    const tumblr: tumblrCli.tumblrCli = new tumblrCli.tumblrCli(oauth);
 
                     tumblrData = tumblr;
                     event.sender.send('authorizeComplete', await tumblr.getDashboardLatest(), tumblr.readLimit);
-                    console.log(Pack['name'] + ': Authorize succeed');
+                    console.log(name + ': Authorize succeed');
                 }
             }
         );
@@ -88,29 +87,29 @@ function getAccessToken(event: any) {
 
 async function login(event: any) {
     if (ExistFile.isExistFile(__dirname + '/' + TOKENS_FILE)) {
-        console.log(Pack['name'] + ': Found AccessToken...');
+        console.log(name + ': Found AccessToken...');
         const splitToken: string[] = fs.readFileSync(__dirname + '/' + TOKENS_FILE).toString().split(/\r\n|\r|\n/);
 
         if (splitToken[0] != "" && splitToken[1] != "") {
-            console.log(Pack['name'] + ': Authorize...');
-            const tumblr = new tumblrCli.tumblrCli([CONSUMER_KEY, CONSUMER_SECRET, splitToken[0], splitToken[1]]);
+            console.log(name + ': Authorize...');
+            const tumblr:tumblrCli.tumblrCli = new tumblrCli.tumblrCli([CONSUMER_KEY, CONSUMER_SECRET, splitToken[0], splitToken[1]]);
             tumblrData = tumblr;
 
             event.sender.send('authorizeComplete', await tumblr.getDashboardLatest(), tumblr.readLimit);
-            console.log(Pack['name'] + ': Authorize succeed');
+            console.log(name + ': Authorize succeed');
         } else {
-            console.log(Pack['name'] + ': ill-formed, getting access token...');
+            console.log(name + ': ill-formed, getting access token...');
             getAccessToken(event);
         }
     } else {
-        console.log(Pack['name'] + ': Not Found AccessToken, create new access token...');
+        console.log(name + ': Not Found AccessToken, create new access token...');
         getAccessToken(event);
     }
 }
 
-async function loadOtherItem(Item: string, view: any, event: any) {
+async function loadOtherItem(Item: string, view: Viewmodule.Page, event: any) {
     if (view.nowOpenItem !== Item) {
-        console.log(Pack['name'] + ': Load ' + Item);
+        console.log(name + ': Load ' + Item);
 	view.nowOpenItem = Item;
 
 	if(Item === menu[0]) {
@@ -135,14 +134,14 @@ async function loadOtherItem(Item: string, view: any, event: any) {
 };
 
 export function browser_main() {
-    let view = new Viewmodule.Page(__dirname + '/../../render/docs/dash.html');
+    var view = new Viewmodule.Page(__dirname + '/../../render/docs/dash.html');
 
     view.mb.on('ready', () => {
-        console.log(Pack['name'] + ': Ready');
+        console.log(name + ': Ready');
     });
 
     view.ipcMain.on('clicked_quit', () => {
-        console.log(Pack['name'] + ': Bye!');
+        console.log(name + ': Bye!');
         view.mb.app.quit();
     });
 

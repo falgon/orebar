@@ -1,3 +1,5 @@
+/// <refernce path='./tumblr.d.ts' />
+
 export class tmbrDashboardParse {
     constructor(private postData: any, private limit: number) { }
 
@@ -44,7 +46,7 @@ export class tmbrDashboardParse {
     public reblog_key(entryNum: number): string {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).reblog_key;
     }
-    public tags(entryNum: number): [Object] {
+    public tags(entryNum: number): string[] {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).tags;
     }
     public short_url(entryNum: number): string {
@@ -74,10 +76,10 @@ export class tmbrDashboardParse {
     public caption(entryNum: number): string {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).caption;
     }
-    public reblog(entryNum: number): [Object] {
+    public reblog(entryNum: number): tumblr.DashboardResponse.Reblog {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).reblog;
     }
-    public trail(entryNum: number): [Object] {
+    public trail(entryNum: number): tumblr.DashboardResponse.trailElements.Trail {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).trail;
     }
     public image_permalink(entryNum: number): string {
@@ -101,19 +103,12 @@ export class tmbrDashboardParse {
     public display_avatar(entryNum: number): boolean {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).display_avatar;
     }
-    public original_image(entryNum: number): ImageProper {
-	return this.limitCheck(entryNum) ? undefined : 
-	    {
-		url: this.photos(entryNum)[0].original_size.url, 
-		width: this.photos(entryNum)[0].original_size.width,
-		height: this.photos(entryNum)[0].original_size.width
-	    };
+    public original_image(entryNum: number): tumblr.ImageProper {
+        return this.limitCheck(entryNum) ? undefined :
+            {
+                url: this.photos(entryNum)[0].original_size.url,
+                width: this.photos(entryNum)[0].original_size.width,
+                height: this.photos(entryNum)[0].original_size.width
+            };
     }
 }
-
-interface ImageProper {
-    url: string;
-    width: number;
-    height: number;
-}
-    

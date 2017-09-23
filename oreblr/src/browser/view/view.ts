@@ -1,15 +1,20 @@
 import * as menubar from 'menubar';
 import * as Electron from 'electron';
 import * as makeKeyFromHTMLPath from '../utility/makeKeyFromHTMLPath';
+import obtainFnReType from '../utility/obtainFnReType';
 import { menu } from '../../render/menu';
-const Pack = require('../../../package.json');
-interface execType { (): void };
+import { name } from '../../../package.json';
+
+module detail{
+    export const mbtypev = obtainFnReType(menubar);
+}
+type mbType = typeof detail.mbtypev;
 
 export class Page {
-    public mb: any;
+    public mb: mbType;
     private topFrag: boolean;
     private showDockIcon: boolean;
-    private ipcMain: NodeJS.EventEmitter;
+    public ipcMain: NodeJS.EventEmitter;
     private nowOpenItemData: string = undefined;
 
     constructor(f: string) {
@@ -19,7 +24,7 @@ export class Page {
 
         this.mb = menubar();
         this.mb.setOption('dir', process.cwd());
-        this.mb.setOption('tooltip', Pack['name']);
+        this.mb.setOption('tooltip', name);
 
         let firsturi: string = 'file://' + __dirname + '/../../render/docs/tumblrAS.html';
         this.nowOpenItemData = makeKeyFromHTMLPath.makeKeyFromHTMLPath(firsturi);
@@ -33,15 +38,14 @@ export class Page {
         this.mb.setOption('height', 400);
         this.mb.setOption('minWidth', 600);
 	this.mb.setOption('minHeight', 400);
-	//this.mb.setOption('resizable', false); // will implementing
+	this.mb.setOption('resizable', true);
 	this.mb.setOption('movable', false);
 
         this.mb.setOption('icon', __dirname + '/../../assets/menubaricon/icon.png');
-        this.mb.on('after-hide', function() { this.mb.app.hide() }.bind(this));
-        this.mb.on('after-create-window', function() {
-            this.loadURL('file://' + f);
-	    this.nowOpenItemData = menu[0];
-        }.bind(this));
+	this.mb.on('after-hide', () => { this.mb.app.hide() });
+	this.mb.on('after-create-window', () => {
+            this.loadURL('file://' + f, menu[0]);
+	});
     }
 
     public loadURL(uri: string, Key: string) {
@@ -77,12 +81,12 @@ export class Page {
         return this.mb.positioner;
     }
 
-    public getOption(option: string): any {
+    public getOption(option: string) {
         return this.mb.getOption(option);
     }
 
-    public on_ready(x: execType): void {
-        this.mb.on('ready', function ready() {
+    public on_ready(x: () => void) {
+	this.mb.on('ready', () => {
             x();
         });
     }

@@ -2,6 +2,9 @@ import * as React from 'react';
 import * as TumblrParser from '../../browser/apps/tumblr/tmbrDashboardParse';
 import { ipcRenderer } from 'electron';
 import { menu } from '../menu';
+import { Page } from '../../browser/view/view';
+/// <referehce path='../../browser/apps/tumblr/tumblr.d.ts' />
+
 const Loader = require('react-loaders').Loader;
 require('../docs/style/loader.scss');
 require('../docs/style/dash.scss');
@@ -12,33 +15,33 @@ interface MainBoardStates {
     is_authorized?: boolean;
 }
 
-export class MainBoard extends React.Component<any, MainBoardStates> {
+export class MainBoard extends React.Component<undefined, MainBoardStates> {
     private articles: JSX.Element;
 
-    constructor(props: any) {
+    constructor(props: undefined) {
         super(props);
 
         this.state = { menuStatus: menu[0], is_authorized: false };
 
         ipcRenderer.send('tumblrAuthorization');
-        ipcRenderer.on('authorizeComplete', function(_: any, tmbr: any, limit: number) {
+        ipcRenderer.on('authorizeComplete', (_: any, tmbr: Page, limit: number) => {
             ipcRenderer.removeAllListeners('authorizeComplete');
 	    this.articles = this.getBlogArticles(tmbr, limit)
 	    this.setState({ is_authorized: true });
-        }.bind(this));
+        });
 
         for (let item of menu) {
-            ipcRenderer.on(item, function (_: any, tmbr: any, limit: number) { // load another dashbord items...
+            ipcRenderer.on(item, (_: any, tmbr: Page, limit: number) => { // load another dashbord items...
 		this.articles = this.getBlogArticles(tmbr, limit);
                 this.setState({ menuStatus: item });
-            }.bind(this));
+            });
         }
     }
 
-    public getBlogArticles(tmbr: any, limit: any) {
+    public getBlogArticles(tmbr: Page, limit: number) {
         const tmbrParse = new TumblrParser.tmbrDashboardParse(tmbr, limit);
 
-        let tmp: [string, any][] = [];
+        let tmp: [string, string | tumblr.ImageProper][] = [];
         
 	for (let i = 0; i < limit; ++i) {
 	    if(tmbrParse.postType(i) === 'photo') {
@@ -61,13 +64,14 @@ export class MainBoard extends React.Component<any, MainBoardStates> {
 	return (
 	    <div id='photos'>
 	    	{
-		    tmp.map((item: [string, any]) => {
+		    tmp.map((item: [string, tumblr.ImageProper]) => {
 	    		if(item[0] === 'photo') {
 				return <img className='dashPhoto' src={item[1].url} />;
 	    		} else if (item[0] === 'text') {
 				return <p className='textPhoto'>{item[1]}</p>;
 	    		} else if (item[0] === 'quote') {
 	    		} else if (item[0] === 'link') {
+
 	    		} else if (item[0] === 'chat') {
 	    		} else if (item[0] === 'audio') {
 	    		} else if (item[0] === 'video') {

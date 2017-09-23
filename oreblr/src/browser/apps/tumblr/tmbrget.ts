@@ -1,7 +1,8 @@
+/// <reference path='./tumblr.d.ts' />
 const tumblr = require('tumblr.js');
 
 export class tumblrCli {
-    private client: any = undefined;
+    private client: tumblr.Client = undefined;
     private fav_read_pos: number = 0;
 
     constructor(oauth: any, private read_limit: number = 20, private read_pos: number = 0) {
@@ -11,8 +12,8 @@ export class tumblrCli {
             token: oauth[2],
             token_secret: oauth[3]
         });
-	this.client.returnPromises();
-	this.fav_read_pos = 0;
+        this.client.returnPromises();
+        this.fav_read_pos = 0;
     }
 
     public getUserInfo() {
@@ -22,18 +23,18 @@ export class tumblrCli {
     public async getUserBlog() {
         let p = await this.getUserInfo();
         let result: string[] = [];
-        p.user.blogs.forEach((blog: any) => result.push(blog.name));
+        p.user.blogs.forEach((blog: tumblr.UserInfo.detail.ResponseBlogs) => result.push(blog.name));
         return result;
     }
 
     public getDashboardLatest() {
-        return this.client.userDashboard({ limit: this.read_limit }, function(err: any, _: any): void {
+        return this.client.userDashboard({ limit: this.read_limit }, (err: Error, _: string, __: string) => {
             if (!err) this.read_pos = this.read_limit;
-        }.bind(this));
+        });
     }
 
     public getDashboard(off: number, t: string = undefined) {
-        let params: Object = undefined;
+        let params: tumblr.params = undefined;
 
         if (t === undefined) {
             params = { offset: off };
@@ -41,23 +42,22 @@ export class tumblrCli {
             params = { offset: off, type: t };
         }
 
-        return this.client.userDashboard(params, function(err: any, _: any): void {
+        return this.client.userDashboard(params, (err: Error, _: string, __: string) => {
             if (!err) this.read_pos += this.read_limit;
-        }.bind(this));
+        });
     }
 
     public getDashboardNext(readSize: number = this.read_limit) {
-        return this.client.userDashboard({ offset: this.read_pos, limits: readSize }, function(err: any, _: any): void {
+        return this.client.userDashboard({ offset: this.read_pos, limit: readSize }, (err: Error, _: string, __: string) => {
             if (!err) this.read_pos += readSize;
-        }.bind(this));
+        });
     }
 
     public getLikes() {
-	return this.client.userLikes({ limit: this.read_limit }, function(err: any, _:any): void {
-	    if(!err) this.fav_read_pos = this.read_limit;
-	}.bind(this));
+        return this.client.userLikes({ limit: this.read_limit }, (err: Error, _: string, __: string) => {
+            if (!err) this.fav_read_pos = this.read_limit;
+        })
     }
-
 
     get readPos(): number {
         return this.read_pos;

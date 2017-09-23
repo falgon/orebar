@@ -1,1 +1,3 @@
-export const menu: string[] = ['Dashboard','Likes','Follows','MyBlogs','Popular','Settings','About'];
+export const menu: string[] = [
+    'Dashboard', 'Likes', 'Follows', 'MyBlogs', 'Popular', 'Settings', 'About'
+]

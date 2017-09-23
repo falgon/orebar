@@ -1,6 +1,6 @@
-import * as viewMain from './browser/view/viewMain.js';
+import * as viewMain from './browser/view/viewMain';
 
-function main(): void {
+const main: () => void = () => {
     viewMain.browser_main();
 }
 
