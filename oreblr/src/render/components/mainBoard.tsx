@@ -16,71 +16,77 @@ interface MainBoardStates {
 }
 
 export class MainBoard extends React.Component<undefined, MainBoardStates> {
-    private articles: JSX.Element;
+    private articles: JSX.Element[] = [];
     private removeTag:(_:string) => string = (x: string) => x.replace(/<\/?[^>]+(>|$)/g, "")
     private disableMoreLoad: boolean = true;
 
-    constructor(props: undefined) {
-        super(props);
-
-        this.state = { menuStatus: menu[0], is_authorized: false };
-
+    private init() {
         ipcRenderer.send('tumblrAuthorization');
 
         ipcRenderer.on('authorizeComplete', (_: any, tmbr: any, limit: number) => {
             ipcRenderer.removeAllListeners('authorizeComplete');
-	    this.articles = this.getBlogArticles(new tmbrDashboardParse(tmbr, limit));
+	    this.articles.push(this.getBlogArticles(new tmbrDashboardParse(tmbr, limit)));
 	    this.setState({ is_authorized: true }, () => this.disableMoreLoad = false);
         });
-	
+    }
+
+    private sidebar_button_events() {
 	ipcRenderer.on('reloaded_data', (_: any, Item: string, tmbr: any, limit: number) => {
 	    if(Item === menu[0]) {
-		this.articles = this.getBlogArticles(new tmbrDashboardParse(tmbr, limit));
+		this.articles.length = 0;
+		this.articles.push(this.getBlogArticles(new tmbrDashboardParse(tmbr, limit)));
 		this.setState({ is_authorized: true, menuStatus: Item });
 	    } else if (Item === menu[1]) {
-		this.articles = this.getBlogArticles(new tmbrLikesParse(tmbr, limit));
+		this.articles.length = 0;
+		this.articles.push(this.getBlogArticles(new tmbrLikesParse(tmbr, limit)));
 		this.setState({ is_authorized: true, menuStatus: Item });
 	    }
 	});
 
 	ipcRenderer.on('disp_info', (_: any) => {
 	});
+    }
 
-
+    private change_column_events() {
 	ipcRenderer.on(menu[0], (_: any, tmbr: any, limit: number) => {
-	    this.articles = this.getBlogArticles(new tmbrDashboardParse(tmbr, limit));
+	    this.articles.length = 0;
+	    this.articles.push(this.getBlogArticles(new tmbrDashboardParse(tmbr, limit)));
 	    this.setState({ is_authorized: true, menuStatus: menu[0] });
 	});
 	
 	ipcRenderer.on(menu[1], (_: any, tmbr: any, limit: number) => {
-	    this.articles = this.getBlogArticles(new tmbrLikesParse(tmbr, limit));
+	    this.articles.length = 0;
+	    this.articles.push(this.getBlogArticles(new tmbrLikesParse(tmbr, limit)));
 	    this.setState({ is_authorized: true, menuStatus: menu[1] });
 	});
 
 	ipcRenderer.on(menu[2], (_: any, tmbr: any, __: number) => {
-	    this.articles = <p>{tmbr.users[0].name}</p>;
+	    this.articles.length = 0;
+	    this.articles.push(<p>{tmbr.users[0].name}</p>);
 	    this.setState({ is_authorized: true, menuStatus: menu[2] });
 	});
+    }
 
-	ipcRenderer.on('reloaded_data', (_: any, Item: string, tmbr: any, limit: number) => {
-	    if(Item === menu[0]) {
-		this.articles = this.getBlogArticles(new tmbrDashboardParse(tmbr, limit));
-		this.setState({ is_authorized: true, menuStatus: Item });
-	    } else if (Item === menu[1]) {
-		this.articles = this.getBlogArticles(new tmbrLikesParse(tmbr, limit));
-		this.setState({ is_authorized: true, menuStatus: Item });
-	    }
-	});
-
+    private more_loading_events() {
 	ipcRenderer.on(menu[0] + '_moreLoaded', (_:any, tmbr: any, limit: number) => {
 	    this.disableMoreLoad = true;
-	    this.articles = this.getBlogArticles(new tmbrDashboardParse(tmbr, limit)); ///////
+	    this.articles.push(this.getBlogArticles(new tmbrDashboardParse(tmbr, limit))); ///////
 	    this.setState({ is_authorized: true, menuStatus: menu[0] });
 	    this.disableMoreLoad = false;
 	});
     }
 
-    public getBlogArticles(tmbrParse: tmbrDashboardParse | tmbrLikesParse) {
+    constructor(props: undefined) {
+        super(props);
+
+        this.state = { menuStatus: menu[0], is_authorized: false };
+	this.init();
+	this.sidebar_button_events();	
+	this.change_column_events();
+	this.more_loading_events();
+    }
+
+    private getBlogArticles(tmbrParse: tmbrDashboardParse | tmbrLikesParse) {
 
         let tmp: [string, string | tumblr.ImageProper][] = [];
         
@@ -104,7 +110,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
 
 	
 	return (
-	    <div id='photos'>
+	    <div>
 	    	{
 		    tmp.map((item: [string, tumblr.ImageProper]) => {
 	    		if(item[0] === 'photo') {
@@ -139,14 +145,14 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     private loaded() {
         if (this.state.menuStatus === menu[0]) { // Dashboard
             return (
-		<div>
-		    {this.articles}
+		<div id='photos'>
+		    {this.articles.map((item: JSX.Element) => item)}
 		</div>
 	    );
         } else if (this.state.menuStatus === menu[1]) { // Likes
             return (
-                <div>
-                    {this.articles}
+                <div id='photos'>
+                    {this.articles.map((item: JSX.Element) => item)}
                 </div>
             );
         } else if (this.state.menuStatus === menu[2]) { // Follows
@@ -201,8 +207,8 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             <main id='panel'>
                 <section>
                     {this.displayMain()}
-                    <div className='centernize'><Loader type='square-spin' /></div>
                 </section>
+                <div className='centernize'><Loader type='square-spin' /></div>
 	    	<VisibilitySensor onChange={(isVisible: boolean) => { if(isVisible && (!this.disableMoreLoad)){ this.loadMore() } }} />
             </main>
         );
