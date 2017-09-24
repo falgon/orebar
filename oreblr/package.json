@@ -63,6 +63,7 @@
     "react-icons": "^2.2.5",
     "react-loaders": "^2.5.0",
     "react-scripts-ts": "2.6.0",
+    "react-visibility-sensor": "^3.10.1",
     "sass-loader": "^6.0.6",
     "slideout": "1.0.1",
     "source-map-loader": "^0.2.1",

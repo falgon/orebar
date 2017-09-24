@@ -165,6 +165,24 @@ function loadOtherItem(Item: string, view: Viewmodule.Page, event: any) {
     }
 };
 
+function loadMoreItem(Item: string, view: Viewmodule.Page, event: any) {
+    switch(Item) {
+	case menu[0]: {
+	    tumblrData.getDashboardNext().then((data: any) => {
+		event.sender.send(menu[0] + '_moreLoaded', data, tumblrData.readLimit);
+		view.nowOpenItem = menu[0];
+		console.log(name + ': ipc: sended => ' + menu[0] + '_moreLoaded');
+	    }).catch((err: Error) => {
+		console.log(err);
+	    });
+	    break;
+	}
+	default: {
+	    console.log("Else");
+	}
+    }
+}
+
 export function browser_main() {
     var view = new Viewmodule.Page(__dirname + '/../../render/docs/dash.html');
 
@@ -193,9 +211,15 @@ export function browser_main() {
 	});
     });
 
-    for(let item of menu){
+    for(let item of menu) {
 	view.ipcMain.on(item, (event: any) => {
 	    loadOtherItem(item, view, event);
+	});
+    }
+
+    for(let item of menu) {
+	view.ipcMain.on(item + '_more', (event: any) => {
+	    loadMoreItem(item, view, event);
 	});
     }
 }

@@ -4,7 +4,7 @@ import { tmbrDashboardParse } from '../../browser/apps/tumblr/tmbrDashboardParse
 import { tmbrLikesParse } from '../../browser/apps/tumblr/tmbrLikesParse';
 import { ipcRenderer } from 'electron';
 import { menu } from '../menu';
-
+const VisibilitySensor = require('react-visibility-sensor');
 const Loader = require('react-loaders').Loader;
 require('../docs/style/loader.scss');
 require('../docs/style/dash.scss');
@@ -18,6 +18,7 @@ interface MainBoardStates {
 export class MainBoard extends React.Component<undefined, MainBoardStates> {
     private articles: JSX.Element;
     private removeTag:(_:string) => string = (x: string) => x.replace(/<\/?[^>]+(>|$)/g, "")
+    private disableMoreLoad: boolean = true;
 
     constructor(props: undefined) {
         super(props);
@@ -29,7 +30,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
         ipcRenderer.on('authorizeComplete', (_: any, tmbr: any, limit: number) => {
             ipcRenderer.removeAllListeners('authorizeComplete');
 	    this.articles = this.getBlogArticles(new tmbrDashboardParse(tmbr, limit));
-	    this.setState({ is_authorized: true });
+	    this.setState({ is_authorized: true }, () => this.disableMoreLoad = false);
         });
 	
 	ipcRenderer.on('reloaded_data', (_: any, Item: string, tmbr: any, limit: number) => {
@@ -70,6 +71,13 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
 		this.setState({ is_authorized: true, menuStatus: Item });
 	    }
 	});
+
+	ipcRenderer.on(menu[0] + '_moreLoaded', (_:any, tmbr: any, limit: number) => {
+	    this.disableMoreLoad = true;
+	    this.articles = this.getBlogArticles(new tmbrDashboardParse(tmbr, limit)); ///////
+	    this.setState({ is_authorized: true, menuStatus: menu[0] });
+	    this.disableMoreLoad = false;
+	});
     }
 
     public getBlogArticles(tmbrParse: tmbrDashboardParse | tmbrLikesParse) {
@@ -94,6 +102,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
 	    }
         }
 
+	
 	return (
 	    <div id='photos'>
 	    	{
@@ -182,13 +191,19 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     private displayMain() {
         return this.state.is_authorized ? this.loaded() : this.loading();
     }
+    
+    private loadMore() {
+	ipcRenderer.send(this.state.menuStatus + '_more');
+    }
 
     public render() {
         return (
             <main id='panel'>
                 <section>
                     {this.displayMain()}
+                    <div className='centernize'><Loader type='square-spin' /></div>
                 </section>
+	    	<VisibilitySensor onChange={(isVisible: boolean) => { if(isVisible && (!this.disableMoreLoad)){ this.loadMore() } }} />
             </main>
         );
     }
