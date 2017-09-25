@@ -166,17 +166,30 @@ function loadOtherItem(Item: string, view: Viewmodule.Page, event: any) {
 };
 
 function loadMoreItem(Item: string, view: Viewmodule.Page, event: any) {
+    const suffix = '_moreLoaded';
+
     switch(Item) {
 	case menu[0]: {
 	    tumblrData.getDashboardNext().then((data: any) => {
-		event.sender.send(menu[0] + '_moreLoaded', data, tumblrData.readLimit);
+		event.sender.send(menu[0] + suffix, data, tumblrData.readLimit);
 		view.nowOpenItem = menu[0];
-		console.log(name + ': ipc: sended => ' + menu[0] + '_moreLoaded');
+		console.log(name + ': ipc: sended => ' + menu[0] + suffix);
 	    }).catch((err: Error) => {
 		console.log(err);
 	    });
 	    break;
 	}
+	case menu[1]: {
+	    tumblrData.getLikesNext().then((data: any) => {
+		event.sender.send(menu[1] + suffix, data, tumblrData.readLimit);
+		view.nowOpenItem = menu[1];
+		console.log(name + ': ipc: sended => ' + menu[1] + suffix);
+	    }).catch((err: Error) => {
+		console.log(err);
+	    });
+	    break;
+	}
+
 	default: {
 	    console.log("Else");
 	}

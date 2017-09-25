@@ -5,11 +5,11 @@
   "description": "Simply Tumblr viewer on your menu/task bar.",
   "main": "./src/main.js",
   "scripts": {
-    "build": "npm --prefix ../build/ i && npm i && ../build/node_modules/webpack/bin/webpack.js --config ../build/webpack.config.js && ./node_modules/tslint/bin/tslint ./src && ./node_modules/typescript/bin/tsc --p ./tsconfig.json && node ../build/build.js",
-    "build:release": "npm --prefix ../build/ i && npm i && ../build/node_modules/webpack/bin/webpack.js --config ../build/webpack.production.config.js && ./node_modules/tslint/bin/tslint ./src && ./node_modules/typescript/bin/tsc --p ./tsconfig.json && node ../build/build.js",
+    "build": "npm --prefix ../build/ i && npm i && ../build/node_modules/webpack/bin/webpack.js --config ../build/webpack.config.js && ./node_modules/typescript/bin/tsc --p ./tsconfig.json && node ../build/build.js",
+    "build:release": "npm --prefix ../build/ i && npm i && ../build/node_modules/webpack/bin/webpack.js --config ../build/webpack.production.config.js && ./node_modules/typescript/bin/tsc --p ./tsconfig.json && node ../build/build.js",
     "asar": "../build/node_modules/asar/bin/asar.js pack ../oreblr ../build/Orebar.asar",
-    "test": "../build/node_modules/webpack/bin/webpack.js --config ../build/webpack.config.js && ./node_modules/tslint/bin/tslint ./src && ./node_modules/typescript/bin/tsc --p ./tsconfig.json && ./node_modules/electron/cli.js ./src/main.js",
-    "tsc": "../build/node_modules/webpack/bin/webpack.js --config ../build/webpack.config.js && ./node_modules/tslint/bin/tslint ./src &&  ./node_modules/typescript/bin/tsc --p ./tsconfig.json",
+    "test": "../build/node_modules/webpack/bin/webpack.js --config ../build/webpack.config.js && ./node_modules/typescript/bin/tsc --p ./tsconfig.json && ./node_modules/electron/cli.js ./src/main.js",
+    "tsc": "../build/node_modules/webpack/bin/webpack.js --config ../build/webpack.config.js  &&  ./node_modules/typescript/bin/tsc --p ./tsconfig.json",
     "tscwatch": "./node_modules/typescript/bin/tsc --watch -p ./tsconfig.json",
     "webpackwatch": "../build/node_modules/webpack/bin/webpack.js --config ../build/webpack.config.js",
     "clean": "rm -f *.js *.map && find ./src -name \"*.js\" -print -exec rm {} \";\" && find ./src -name \"*.map\" -print -exec rm {} \";\"",
@@ -37,7 +37,8 @@
     "awesome-typescript-loader": "3.2.3",
     "css-loader": "0.28.7",
     "react-bootstrap": "0.31.3",
-    "tslint": "^5.7.0"
+    "tslint": "^5.7.0",
+    "tslint-loader": "^3.5.3"
   },
   "dependencies": {
     "@types/express": "4.0.37",
@@ -54,6 +55,7 @@
     "loaders.css": "0.1.2",
     "menubar": "5.2.3",
     "node": "8.3.0",
+    "node-mutex": "^0.2.2",
     "node-sass": "4.5.3",
     "oauth": "0.9.15",
     "opener": "1.4.3",

@@ -4,7 +4,7 @@ const tumblr = require('tumblr.js');
 export class tumblrCli {
     private client: tumblr.Client = undefined;
 
-    constructor(oauth: any, private read_limit: number = 20, private read_pos: number = 0, private fav_read_pos: number = 0, private follow_read_pos: number = 0) {
+    constructor(oauth: any, private read_limit: number = 20, private read_pos: number = 0, private likes_read_pos: number = 0, private follow_read_pos: number = 0) {
         this.client = tumblr.createClient({
             consumer_key: oauth[0],
             consumer_secret: oauth[1],
@@ -12,7 +12,6 @@ export class tumblrCli {
             token_secret: oauth[3]
         });
         this.client.returnPromises();
-        this.fav_read_pos = 0;
     }
 
     public getUserInfo() {
@@ -54,24 +53,32 @@ export class tumblrCli {
 
     public getLikes() {
         return this.client.userLikes({ limit: this.read_limit }, (err: Error, _: string, __: string) => {
-            if (!err) this.fav_read_pos = this.read_limit;
+            if (!err) this.likes_read_pos = this.read_limit;
+        });
+    }
+
+    public getLikesNext(readSize: number = this.read_limit) {
+        return this.client.userLikes({ offset: this.likes_read_pos, limit: readSize }, (err: Error, _: string, __: string) => {
+            if (!err) this.likes_read_pos += readSize;
         });
     }
 
     public getFollowing() {
-	return this.client.userFollowing({ limit: this.read_limit }, (err: Error, _:string, __: string) => {
-	    if (!err) this.follow_read_pos = this.read_limit;
-	});
+        return this.client.userFollowing({ limit: this.read_limit }, (err: Error, _: string, __: string) => {
+            if (!err) this.follow_read_pos = this.read_limit;
+        });
     }
-
 
     get readPos(): number {
         return this.read_pos;
     }
+    get likes_readPos(): number {
+        return this.likes_read_pos;
+    }
+
     get readLimit(): number {
         return this.read_limit;
     }
-
     set readLimit(limit: number) {
         this.read_limit = limit;
     }

@@ -3,18 +3,12 @@
 export class tmbrLikesParse {
     constructor(private postData: any, private limit: number) { }
 
-    private limitCheck(n: number): boolean {
-        return n >= this.limit;
-    }
-    private at(index: number) {
-        return this.postData.liked_posts[index];
-    }
     get readLimit(): number {
-	return this.limit;
+        return this.limit;
     }
 
     public liked_count(): number {
-	return this.postData.liked_count;
+        return this.postData.liked_count;
     }
     public title(entryNum: number): string {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).title;
@@ -64,10 +58,10 @@ export class tmbrLikesParse {
     public is_blocks_post_format(entryNum: number): boolean {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).is_blocks_post_format;
     }
-    public recommended_source(entryNum: number): any {
+    public recommended_source(entryNum: number): {} {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).recommended_source;
     }
-    public recommended_color(entryNum: number): any {
+    public recommended_color(entryNum: number): {} {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).recommended_color;
     }
     public followed(entryNum: number): boolean {
@@ -116,5 +110,11 @@ export class tmbrLikesParse {
                 width: this.photos(entryNum)[0].original_size.width,
                 height: this.photos(entryNum)[0].original_size.width
             };
+    }
+    private limitCheck(n: number): boolean {
+        return n >= this.limit;
+    }
+    private at(index: number) {
+        return this.postData.liked_posts[index];
     }
 }

@@ -15,16 +15,17 @@ module.exports = {
     },
     module:{
 	rules:[
-	    { test: /\.tsx?$/, loader: "awesome-typescript-loader", exclude: /node_modules/ },
-	    { test: /\.scss?$/, loaders: ["style-loader","css-loader","sass-loader"] },
-	    { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+	    { test: /\.tsx?$/, loader: 'awesome-typescript-loader', exclude: /node_modules/ },
+	    { test: /\.scss?$/, loaders: ['style-loader','css-loader','sass-loader'] },
+	    { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
+	    { enforce: 'pre', test: /\.tsx?$/, exclude: /node_modules/, loader:'tslint-loader' }
 	],
 	loaders: [
-	    { exclude: /node_modules/ }
+	    { exclude: /node_modules/ },
 	]
     },
     externals:{
-	"react": "React",
-	"react-dom": "ReactDOM"
+	'react': 'React',
+	'react-dom': 'ReactDOM'
     },
 };

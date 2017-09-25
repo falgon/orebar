@@ -24,8 +24,8 @@ declare module tumblr {
     export interface Client {
         userInfo(): Promise<UserInfo.UserInfo>;
         userDashboard(_: params, __: callbackType): Promise<Object>;
-	userLikes(_: params, __: callbackType): Promise<Object>;
-	userFollowing(_: params, __:callbackType): Promise<Object>;
+        userLikes(_: params, __: callbackType): Promise<Object>;
+        userFollowing(_: params, __: callbackType): Promise<Object>;
         returnPromises(): void;
     }
 
