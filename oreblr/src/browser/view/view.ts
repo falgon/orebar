@@ -3,7 +3,7 @@ import * as Electron from 'electron';
 import * as makeKeyFromHTMLPath from '../utility/makeKeyFromHTMLPath';
 import obtainFnReType from '../utility/obtainFnReType';
 import { menu } from '../../render/menu';
-import { name } from '../../../package.json';
+import { productName } from '../../../package.json';
 
 module detail{
     export const mbtypev = obtainFnReType(menubar);
@@ -24,7 +24,7 @@ export class Page {
 
         this.mb = menubar();
         this.mb.setOption('dir', process.cwd());
-        this.mb.setOption('tooltip', name);
+        this.mb.setOption('tooltip', productName);
 
         let firsturi: string = 'file://' + __dirname + '/../../render/docs/tumblrAS.html';
         this.nowOpenItemData = makeKeyFromHTMLPath.makeKeyFromHTMLPath(firsturi);

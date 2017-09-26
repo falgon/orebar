@@ -11,6 +11,13 @@
 }
 
 .sidemenuItem {
+    font-family: Georgia, Times, "Times New Roman", serif;
+    font-size: 14px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    line-height: 26.4px;
+
     cursor: pointer;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -61,6 +68,11 @@
 }
 
 #sidemenuTitle {
+    font-family: 'Bookman Old Style'; 
+    font-size: 24px; 
+    font-style: normal; 
+    font-variant: normal; 
+    font-weight: bold;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 

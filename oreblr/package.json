@@ -1,6 +1,6 @@
 {
   "name": "oreblr",
-  "productName": "oreblr",
+  "productName": "Oreblr.",
   "version": "0.0.1",
   "description": "Simply Tumblr viewer on your menu/task bar.",
   "main": "./src/main.js",

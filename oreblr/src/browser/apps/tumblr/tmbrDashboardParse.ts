@@ -7,6 +7,10 @@ export class tmbrDashboardParse {
         return this.limit;
     }
 
+    public count_post(): number {
+        return 0;
+    }
+
     public title(entryNum: number): string {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).title;
     }

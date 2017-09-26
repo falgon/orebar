@@ -6,8 +6,7 @@ export class tmbrLikesParse {
     get readLimit(): number {
         return this.limit;
     }
-
-    public liked_count(): number {
+    public count_post(): number {
         return this.postData.liked_count;
     }
     public title(entryNum: number): string {
