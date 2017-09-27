@@ -22,7 +22,7 @@ export class Menu extends React.Component<MenuProps, undefined> {
                                 this.props.list.map((item) => {
                                     return (
                                         <li className='sidemenuItem' id={item} onClick={() => { ipcRenderer.send(item); }}>
-						{item}
+                                            {item}
                                         </li>
                                     );
                                 })

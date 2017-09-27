@@ -4,12 +4,14 @@ import { tmbrDashboardParse } from '../../browser/apps/tumblr/tmbrDashboardParse
 import { tmbrLikesParse } from '../../browser/apps/tumblr/tmbrLikesParse';
 import { ipcRenderer } from 'electron';
 import { menu } from '../menu';
+import { postTypes } from '../menu';
 
 const VisibilitySensor = require('react-visibility-sensor');
 const Loader = require('react-loaders').Loader;
 require('../docs/style/loader.scss');
 require('../docs/style/dash.scss');
 require('../docs/style/sidemenu.scss');
+require('../docs/style/hoverPost.scss');
 
 interface MainBoardStates {
     rendernize: boolean;
@@ -19,15 +21,18 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     constructor(props: undefined) {
         super(props);
         this.state = { rendernize: false };
-        this.init();
-        this.sidebar_button_events();
-        this.change_column_events();
-        this.more_loading_events();
     }
 
     public render() {
         const jsxElement = this.render_impl();
         return this.is_authorized ? (this.articles.length ? jsxElement : this.gotEmpty()) : jsxElement;
+    }
+
+    public componentDidMount() {
+        this.init();
+        this.sidebar_button_events();
+        this.change_column_events();
+        this.more_loading_events();
     }
 
     private menuStatus: string = menu[0];
@@ -63,7 +68,10 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
         return (
             <main id='panel'>
                 <div className='centernize'>
-                    <p id='noPosts'>{React.createElement(require('react-icons/lib/md/no-sim'), { size: 90 })}<span className='br' id='noPostsMes'>No posts to display.</span></p>
+                    <p id='noPosts'>
+                        {React.createElement(require('react-icons/lib/md/no-sim'), { size: 90 })}
+                        <span className='br' id='noPostsMes'>No posts to display.</span>
+                    </p>
                 </div>
             </main>
         );
@@ -73,26 +81,31 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
         ipcRenderer.on('reloaded_data', (_: {}, Item: string, tmbr: {}, limit: number) => {
             this.clear();
 
-            if (Item === menu[0]) {
-
-                const dashParser = new tmbrDashboardParse(tmbr, limit);
-
-                if (dashParser.count_post()) {
-                    this.articles.push(this.getBlogArticles(dashParser));
+            switch (Item) {
+                case menu[0]: {
+                    this.menuStatus = menu[0];
+                    const dashParser = new tmbrDashboardParse(tmbr, limit);
+                    if (dashParser.count_post()) {
+                        this.articles.push(this.getBlogArticles(dashParser));
+                    }
+                    this.setState({ rendernize: true });
+                    break;
                 }
-                this.setState({ rendernize: true });
-
-            } else if (Item === menu[1]) {
-
-                const likesParser = new tmbrLikesParse(tmbr, limit);
-
-                if (likesParser.count_post()) {
-                    this.articles.push(this.getBlogArticles(likesParser));
+                case menu[1]: {
+                    this.menuStatus = menu[1];
+                    const likesParser = new tmbrLikesParse(tmbr, limit);
+                    if (likesParser.count_post()) {
+                        this.articles.push(this.getBlogArticles(likesParser));
+                    }
+                    this.setState({ rendernize: true });
+                    break;
                 }
-                this.setState({ rendernize: true });
 
+                // TODO: other sidebar reloaded
+
+                default: {
+                }
             }
-            // TODO: other sidebar reloaded
         });
 
         ipcRenderer.on('disp_info', (_: {}) => {
@@ -144,9 +157,9 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     }
 
     private more_loading_events() {
+        const prefix = '_moreLoaded';
 
-        ipcRenderer.on(menu[0] + '_moreLoaded', (_: {}, tmbr: {}, limit: number) => {
-            // TODO: check empty data
+        ipcRenderer.on(menu[0] + prefix, (_: {}, tmbr: {}, limit: number) => {
             if (!this.disableMoreLoad) {
                 this.disableMoreLoad = true;
                 this.menuStatus = menu[0];
@@ -160,7 +173,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             }
         });
 
-        ipcRenderer.on(menu[1] + '_moreLoaded', (_: {}, tmbr: {}, limit: number) => {
+        ipcRenderer.on(menu[1] + prefix, (_: {}, tmbr: {}, limit: number) => {
             if (!this.disableMoreLoad) {
                 this.disableMoreLoad = true;
                 this.menuStatus = menu[1];
@@ -181,37 +194,38 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
 
         let tmp: [string, string | tumblr.ImageProper][] = [];
 
-        for (let i = 0; i < tmbrParse.count_post(); ++i) { // range over
+        for (let i = 0; i < tmbrParse.count_post(); ++i) {
             switch (tmbrParse.postType(i)) {
-                case 'photo': {
+                case postTypes.photo: {
                     tmp.push([tmbrParse.postType(i), tmbrParse.original_image(i)]);
                     break;
                 }
-                case 'text': {
+                case postTypes.text: {
                     tmp.push([tmbrParse.postType(i), this.removeTag(tmbrParse.body(i))]);
                     break;
                 }
-                case 'quote': {
+                case postTypes.quote: {
                     // TODO: quote
                     break;
                 }
-                case 'link': {
+                case postTypes.link: {
                     // TODO: link
                     break;
                 }
-                case 'chat': {
+                case postTypes.chat: {
                     // TODO: chat
                     break;
                 }
-                case 'audio': {
+                case postTypes.audio: {
                     // TODO: audio
                     break;
                 }
-                case 'video': {
+                case postTypes.video: {
                     // TODO: video
                     break;
                 }
                 default: {
+                    // TODO: catch
                 }
             }
         }
@@ -221,19 +235,35 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             <div>
                 {
                     tmp.map((item: [string, tumblr.ImageProper]) => {
-                        if (item[0] === 'photo') {
-                            return <img className='dashPhoto' src={item[1].url} />;
-                        } else if (item[0] === 'text') {
-                            return <div className='textPhoto'>{item[1]}</div>;
-                        } else if (item[0] === 'quote') {
+                        if (item[0] === postTypes.photo) {
+                            return (
+                                <figure className='hoverActionPhoto'>
+                                    <img className='dashPhoto' src={item[1].url} />
+                                    <figcaption>
+                                        <h3>hogehoge</h3>
+                                        <p>this is test</p>
+                                    </figcaption>
+                                </figure>
+                            );
+                        } else if (item[0] === postTypes.text) {
+                            return (
+                                <figure className='hoverActionPhoto'>
+                                    <div className='textPhoto'><p>{item[1]}</p></div>
+                                    <figcaption>
+                                        <h3>hogehoge</h3>
+                                        <p>this is test</p>
+                                    </figcaption>
+                                </figure>
+                            );
+                        } else if (item[0] === postTypes.quote) {
                             // TODO: quote
-                        } else if (item[0] === 'link') {
+                        } else if (item[0] === postTypes.link) {
                             // TODO: link
-                        } else if (item[0] === 'chat') {
+                        } else if (item[0] === postTypes.chat) {
                             // TODO: chat
-                        } else if (item[0] === 'audio') {
+                        } else if (item[0] === postTypes.audio) {
                             // TODO: audio
-                        } else if (item[0] === 'video') {
+                        } else if (item[0] === postTypes.video) {
                             // TODO: video
                         }
                     })
@@ -251,15 +281,17 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     }
 
     private loaded() {
+        const idname = 'photos';
+
         if (this.menuStatus === menu[0]) { // Dashboard
             return (
-                <div id='photos'>
+                <div id={idname}>
                     {this.articles.map((item: JSX.Element) => item)}
                 </div>
             );
         } else if (this.menuStatus === menu[1]) { // Likes
             return (
-                <div id='photos'>
+                <div id={idname}>
                     {this.articles.map((item: JSX.Element) => item)}
                 </div>
             );

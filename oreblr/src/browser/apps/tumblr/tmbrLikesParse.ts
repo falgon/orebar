@@ -6,9 +6,11 @@ export class tmbrLikesParse {
     get readLimit(): number {
         return this.limit;
     }
+    
     public count_post(): number {
         return this.postData.liked_count;
     }
+
     public title(entryNum: number): string {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).title;
     }

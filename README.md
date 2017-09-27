@@ -13,15 +13,15 @@ This project is still development stage....
 - [ ] Dashboard
 	- [x] infinite scroll & loading
 	- [x] support photo posts
-	- [ ] support text posts
-		- [ ] indent text posts
+	- [x] support text posts
+		- [x] indent text posts
 	- [ ] support quote, link, chat, audio and video posts
 	- [ ] support reblog, like, unlike and share
 - [ ] Likes
 	- [x] infinite scroll & loading
 	- [x] support photo posts
-	- [ ] support text posts
-		- [ ] indent text posts
+	- [x] support text posts
+		- [x] indent text posts
 	- [ ] support quote, link, chat, audio and vide posts
 	- [ ] support reblog, unlike and share 
 - [ ] Follows

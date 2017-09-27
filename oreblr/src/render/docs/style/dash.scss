@@ -44,7 +44,6 @@
 .slideout-open,
 .slideout-open body,
 .slideout-open .slideout-panel {
-    //overflow: hidden;
 }
 
 .slideout-open .slideout-menu {
@@ -55,20 +54,41 @@ html {
     height: 100%;
 }
 
-body,
-.dashPhoto .textPhoto {
-    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Original Yu Gothic", "Yu Gothic", YuGothic, Verdana, Meiryo, "M+ 1p", sans-serif;
+
+body{
     width: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Original Yu Gothic", "Yu Gothic", YuGothic, Verdana, Meiryo, "M+ 1p", sans-serif;
     animation: fadeIn 2s ease 0s 1 normal;
     -webkit-animation: fadeIn 2s ease 0s 1 normal;
 }
 
+
+
+.dashPhoto {
+    @extend body;
+    position: relative;
+    box-sizing: border-box;
+}
+
 .textPhoto {
-    color: #000;
+    display: inline-block;
+    @extend .dashPhoto;
+
     background-color: #eee;
-    padding: 50px 20px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color: #000;
+    box-sizing: border-box;
+    padding: 40px;
+    
+    width:100% !important;
+    height: auto !important;
+
+    p {
+	line-height:110%;
+    	white-space: normal;
+    	word-wrap: break-word;
+    }
 }
 
 @keyframes fadeIn {
@@ -109,7 +129,7 @@ main {
     -webkit-box-shadow: $shadow_right $shadow_bottom $shadow_blur $shadow_spread $shadow_color;
 
     color: #fff;
-    min-height: 100%; //  padding: 3rem 4rem;
+    min-height: 100%;
 }
 
 header {
@@ -158,10 +178,6 @@ $distance: 200px;
     img {
         width: 100% !important;
         height: auto !important;
-    }
-
-    p {
-        width: 100% !important;
     }
 }
 
