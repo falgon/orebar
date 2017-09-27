@@ -1,9 +1,14 @@
 # Oreblr
 [![Build Status](https://travis-ci.org/falgon/oreblr.svg?branch=develop)](https://travis-ci.org/falgon/oreblr)
+[![Issue Count](https://codeclimate.com/github/falgon/oreblr/badges/issue_count.svg)](https://codeclimate.com/github/falgon/oreblr)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9604e7d226db4292aa76f90c6a7d244f)](https://www.codacy.com/app/falgon/oreblr?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=falgon/oreblr&amp;utm_campaign=Badge_Grade)
 
 Oreblr is the cross-platform tumblr client on the menu bar.
 
 This project is still development stage....
+
+
+## Task
 
 - [ ] Dashboard
 	- [x] infinite scroll & loading
@@ -34,3 +39,6 @@ This project is still development stage....
 	- [ ] support search
 - [ ] Settings
 - [ ] About
+
+## License
+[MIT](https://github.com/falgon/oreblr/blob/develop/LICENSE)
