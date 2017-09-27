@@ -10,5 +10,5 @@ branches:
         - master
 
 script: 
-        make
-        make clean
+    - make
+    - make clean
