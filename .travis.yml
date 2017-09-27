@@ -9,8 +9,6 @@ branches:
     except:
         - master
 
-install: 
-        - npm install
 script: 
-        - npm run build
-        - npm run clean
+        make
+        make clean
