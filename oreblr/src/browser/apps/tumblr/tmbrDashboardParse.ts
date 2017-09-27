@@ -8,7 +8,7 @@ export class tmbrDashboardParse {
     }
 
     public count_post(): number {
-        return 0;
+        return this.postData.posts.length;
     }
 
     public title(entryNum: number): string {

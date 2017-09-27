@@ -49,7 +49,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             this.menuStatus = menu[0];
             const dashParse = new tmbrDashboardParse(tmbr, limit);
 
-            if (!dashParse.count_post()) { // TODO: tmbrDashboardParse::count_post always return 0
+            if (dashParse.count_post()) {
                 this.articles.push(this.getBlogArticles(dashParse));
             }
             this.disableMoreLoad = false;
@@ -74,19 +74,23 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             this.clear();
 
             if (Item === menu[0]) {
+
                 const dashParser = new tmbrDashboardParse(tmbr, limit);
 
-                if (!dashParser.count_post()) { // TODO: tmbrDashboardParse::count_post always return 0
+                if (dashParser.count_post()) {
                     this.articles.push(this.getBlogArticles(dashParser));
                 }
                 this.setState({ rendernize: true });
+
             } else if (Item === menu[1]) {
+
                 const likesParser = new tmbrLikesParse(tmbr, limit);
 
                 if (likesParser.count_post()) {
                     this.articles.push(this.getBlogArticles(likesParser));
                 }
                 this.setState({ rendernize: true });
+
             }
             // TODO: other sidebar reloaded
         });
@@ -104,7 +108,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
 
             const dashParser = new tmbrDashboardParse(tmbr, limit);
 
-            if (!dashParser.count_post()) { // TODO: tmbrDashboardParse::count_post always return 0
+            if (dashParser.count_post()) {
                 this.articles.push(this.getBlogArticles(dashParser));
             }
             this.disableMoreLoad = false;
@@ -120,8 +124,8 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
 
             if (likesParser.count_post()) {
                 this.articles.push(this.getBlogArticles(likesParser));
-                //this.articles.push(<div><img className='dashPhoto' src={likesParser.original_image(0).url} /></div>);
             }
+
             this.disableMoreLoad = false;
             this.setState({ rendernize: true });
         });
@@ -148,7 +152,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
                 this.menuStatus = menu[0];
                 const dashParser = new tmbrDashboardParse(tmbr, limit);
 
-                if (!dashParser.count_post()) { // TODO: tmbrDashboardParse::count_post always return 0
+                if (dashParser.count_post()) {
                     this.articles.push(this.getBlogArticles(dashParser));
                 }
                 this.disableMoreLoad = false;
@@ -177,7 +181,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
 
         let tmp: [string, string | tumblr.ImageProper][] = [];
 
-        for (let i = 0; i < tmbrParse.readLimit; ++i) {
+        for (let i = 0; i < tmbrParse.count_post(); ++i) { // range over
             switch (tmbrParse.postType(i)) {
                 case 'photo': {
                     tmp.push([tmbrParse.postType(i), tmbrParse.original_image(i)]);
@@ -211,6 +215,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
                 }
             }
         }
+
 
         return (
             <div>
