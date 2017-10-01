@@ -45,7 +45,7 @@ function build(plt, arc) {
 }
 
 function main() {
-    build('linux'/*os.platform()*/,'x64'/* os.arch()*/);
+    build(os.platform(), os.arch());
 }
 
 main();
