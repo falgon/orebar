@@ -5,7 +5,7 @@ import obtainFnReType from '../utility/obtainFnReType';
 import { menu } from '../../render/menu';
 import { productName } from '../../../package.json';
 
-module detail{
+module detail {
     export const mbtypev = obtainFnReType(menubar);
 }
 type mbType = typeof detail.mbtypev;
@@ -16,6 +16,7 @@ export class Page {
     private showDockIcon: boolean;
     public ipcMain: NodeJS.EventEmitter;
     private nowOpenItemData: string = undefined;
+    private globalShortcut = Electron.globalShortcut;
 
     constructor(f: string) {
         this.topFrag = false;
@@ -34,18 +35,31 @@ export class Page {
         this.mb.setOption('showDockIcon', this.showDockIcon);
         this.mb.setOption('preloadWindow', true);
         this.mb.setOption('backgroundColor', '#36465d');
-        this.mb.setOption('width', 600);
+        this.mb.setOption('width', 640);
         this.mb.setOption('height', 400);
         this.mb.setOption('minWidth', 600);
-	this.mb.setOption('minHeight', 400);
-	this.mb.setOption('resizable', true);
-	this.mb.setOption('movable', false);
+        this.mb.setOption('minHeight', 400);
+        this.mb.setOption('resizable', true);
+        this.mb.setOption('movable', false);
 
         this.mb.setOption('icon', __dirname + '/../../assets/menubaricon/icon.png');
-	this.mb.on('after-hide', () => { this.mb.app.hide() });
-	this.mb.on('after-create-window', () => {
+        this.mb.on('after-hide', () => { this.mb.app.hide() });
+        this.mb.on('after-create-window', () => {
             this.loadURL('file://' + f, menu[0]);
-	});
+        });
+
+        this.mb.app.on('ready', () => {
+            this.globalShortcut.register('CommandOrControl+q', () => {
+                console.log(productName + ': Bye!');
+                this.globalShortcut.unregisterAll();
+                this.mb.app.quit();
+            });
+            this.globalShortcut.register('Ctrl+c', () => {
+                console.log(productName + ': Bye!');
+                this.globalShortcut.unregisterAll();
+                this.mb.app.quit();
+            });
+        });
     }
 
     public loadURL(uri: string, Key: string) {
@@ -86,7 +100,7 @@ export class Page {
     }
 
     public on_ready(x: () => void) {
-	this.mb.on('ready', () => {
+        this.mb.on('ready', () => {
             x();
         });
     }

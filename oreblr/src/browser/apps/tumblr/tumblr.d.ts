@@ -29,6 +29,8 @@ declare module tumblr {
         returnPromises(): void;
     }
 
+    
+
     module DashboardResponse {
         export interface Reblog {
             comment: string;
@@ -75,7 +77,8 @@ declare module tumblr {
             }
         }
 
-        export interface basic {
+	export interface basic_core {
+	    title: string;
             type: string;
             blog_name: string;
             id: number;
@@ -107,8 +110,15 @@ declare module tumblr {
             can_send_in_message: boolean;
             can_reply: boolean;
             display_avatar: boolean;
-            body: string;
-        }
+	    body: string;
+
+	}
+
+	export interface basic {
+	    posts: basic_core[];
+	    liked_posts: basic_core[];
+	    liked_count: number;
+	}
     }
 
     module UserFollowing {
@@ -149,7 +159,8 @@ declare module tumblr {
         }
 
         export interface UserInfo {
-            user: Response;
+	    user: Response;
+	    users: Response[];
         }
     }
 

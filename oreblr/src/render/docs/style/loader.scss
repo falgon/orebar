@@ -12,6 +12,8 @@ $primary-color: #fff;
 }
 
 .centernize {
+    content: "";
+    clear: both;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -1,7 +1,7 @@
 /// <refernce path='./tumblr.d.ts' />
 
-export class tmbrDashboardParse {
-    constructor(private postData: any, private limit: number) { }
+export class TmbrDashboardParse {
+    constructor(private postData: tumblr.DashboardResponse.basic, private limit: number) { }
 
     get readLimit(): number {
         return this.limit;
@@ -59,10 +59,10 @@ export class tmbrDashboardParse {
     public is_blocks_post_format(entryNum: number): boolean {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).is_blocks_post_format;
     }
-    public recommended_source(entryNum: number): {} {
+    public recommended_source(entryNum: number) {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).recommended_source;
     }
-    public recommended_color(entryNum: number): {} {
+    public recommended_color(entryNum: number) {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).recommended_color;
     }
     public followed(entryNum: number): boolean {
@@ -80,7 +80,7 @@ export class tmbrDashboardParse {
     public reblog(entryNum: number): tumblr.DashboardResponse.Reblog {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).reblog;
     }
-    public trail(entryNum: number): tumblr.DashboardResponse.trailElements.Trail {
+    public trail(entryNum: number) {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).trail;
     }
     public image_permalink(entryNum: number): string {

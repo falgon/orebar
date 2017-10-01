@@ -1,13 +1,19 @@
 /// <referehce path='../../browser/apps/tumblr/tumblr.d.ts' />
+/// <referehce path='./keydetect/keyevent.d.ts' />
 import * as React from 'react';
-import { tmbrDashboardParse } from '../../browser/apps/tumblr/tmbrDashboardParse';
-import { tmbrLikesParse } from '../../browser/apps/tumblr/tmbrLikesParse';
+import { TmbrDashboardParse } from '../../browser/apps/tumblr/tmbrDashboardParse';
+import { TmbrLikesParse } from '../../browser/apps/tumblr/tmbrLikesParse';
 import { ipcRenderer } from 'electron';
 import { menu } from '../menu';
 import { postTypes } from '../menu';
+import { scroller } from 'react-scroll';
+import { animateScroll } from 'react-scroll';
+import Masonry from 'react-masonry-component';
+import detectKey from './keydetect/keydetect';
 
 const VisibilitySensor = require('react-visibility-sensor');
 const Loader = require('react-loaders').Loader;
+
 require('../docs/style/loader.scss');
 require('../docs/style/dash.scss');
 require('../docs/style/sidemenu.scss');
@@ -18,6 +24,15 @@ interface MainBoardStates {
 }
 
 export class MainBoard extends React.Component<undefined, MainBoardStates> {
+    private menuStatus: string = menu[0];
+    private is_authorized: boolean = false;
+    private disableMoreLoad: boolean = true;
+    private articles: JSX.Element[] = [];
+    private postCount: number = 0;
+    private postIDPrefix = 'postID_';
+    private nowSelectedPostID: number = 0;
+    private hasDataSize: number = 0;
+
     constructor(props: undefined) {
         super(props);
         this.state = { rendernize: false };
@@ -33,12 +48,9 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
         this.sidebar_button_events();
         this.change_column_events();
         this.more_loading_events();
+        this.keyInput();
     }
 
-    private menuStatus: string = menu[0];
-    private is_authorized: boolean = false;
-    private disableMoreLoad: boolean = true;
-    private articles: JSX.Element[] = [];
     private removeTag: (_: string) => string = (x: string) => x.replace(/<\/?[^>]+(>|$)/g, '');
 
     private clear() {
@@ -48,17 +60,55 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     private init() {
         ipcRenderer.send('tumblrAuthorization');
 
-        ipcRenderer.on('authorizeComplete', (_: {}, tmbr: {}, limit: number) => {
+        ipcRenderer.on('authorizeComplete', (_: {}, tmbr: tumblr.DashboardResponse.basic, limit: number) => {
             ipcRenderer.removeAllListeners('authorizeComplete');
             this.is_authorized = true;
             this.menuStatus = menu[0];
-            const dashParse = new tmbrDashboardParse(tmbr, limit);
+            const dashParse = new TmbrDashboardParse(tmbr, limit);
 
             if (dashParse.count_post()) {
                 this.articles.push(this.getBlogArticles(dashParse));
             }
             this.disableMoreLoad = false;
             this.setState({ rendernize: true });
+        });
+    }
+
+    private keyInput() {
+        document.addEventListener('keydown', (event: HTMLElementEvent<HTMLInputElement>) => {
+            switch (this.menuStatus) {
+                case menu[0]:
+                case menu[1]: {
+                    switch (detectKey(event)) {
+                        case 'J': {
+                            ++this.nowSelectedPostID;
+
+                            if (this.hasDataSize + 1 <= this.nowSelectedPostID) {
+                                animateScroll.scrollToBottom();
+                                // FIXME: https://github.com/fisshy/react-scroll/pull/114
+                            } else {
+                                scroller.scrollTo(this.postIDPrefix + this.nowSelectedPostID.toString(), {});
+                                // FIXME: https://github.com/fisshy/react-scroll/pull/114
+                            }
+                            break;
+                        }
+                        case 'K': {
+                            this.nowSelectedPostID = this.nowSelectedPostID > 1 ?
+                                this.nowSelectedPostID - 1 :
+                                this.nowSelectedPostID;
+                            scroller.scrollTo(this.postIDPrefix + this.nowSelectedPostID.toString(), {});
+                            break;
+                        }
+                        default: {
+                            // TODO: catch another input
+                        }
+                    }
+                    break;
+                }
+                default: {
+                    alert('hoge');
+                }
+            }
         });
     }
 
@@ -78,13 +128,13 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     }
 
     private sidebar_button_events() {
-        ipcRenderer.on('reloaded_data', (_: {}, Item: string, tmbr: {}, limit: number) => {
+        ipcRenderer.on('reloaded_data', (_: {}, Item: string, tmbr: tumblr.DashboardResponse.basic, limit: number) => {
             this.clear();
 
             switch (Item) {
                 case menu[0]: {
                     this.menuStatus = menu[0];
-                    const dashParser = new tmbrDashboardParse(tmbr, limit);
+                    const dashParser = new TmbrDashboardParse(tmbr, limit);
                     if (dashParser.count_post()) {
                         this.articles.push(this.getBlogArticles(dashParser));
                     }
@@ -93,17 +143,16 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
                 }
                 case menu[1]: {
                     this.menuStatus = menu[1];
-                    const likesParser = new tmbrLikesParse(tmbr, limit);
+                    const likesParser = new TmbrLikesParse(tmbr, limit);
                     if (likesParser.count_post()) {
                         this.articles.push(this.getBlogArticles(likesParser));
                     }
                     this.setState({ rendernize: true });
                     break;
                 }
-
-                // TODO: other sidebar reloaded
-
                 default: {
+
+                    // TODO: other sidebar reloaded
                 }
             }
         });
@@ -114,12 +163,12 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     }
 
     private change_column_events() {
-        ipcRenderer.on(menu[0], (_: {}, tmbr: {}, limit: number) => {
+        ipcRenderer.on(menu[0], (_: {}, tmbr: tumblr.DashboardResponse.basic, limit: number) => {
             this.clear();
             this.menuStatus = menu[0];
             this.disableMoreLoad = true;
 
-            const dashParser = new tmbrDashboardParse(tmbr, limit);
+            const dashParser = new TmbrDashboardParse(tmbr, limit);
 
             if (dashParser.count_post()) {
                 this.articles.push(this.getBlogArticles(dashParser));
@@ -128,12 +177,12 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             this.setState({ rendernize: true });
         });
 
-        ipcRenderer.on(menu[1], (_: {}, tmbr: {}, limit: number) => {
+        ipcRenderer.on(menu[1], (_: {}, tmbr: tumblr.DashboardResponse.basic, limit: number) => {
             this.clear();
             this.menuStatus = menu[1];
             this.disableMoreLoad = true;
 
-            const likesParser = new tmbrLikesParse(tmbr, limit);
+            const likesParser = new TmbrLikesParse(tmbr, limit);
 
             if (likesParser.count_post()) {
                 this.articles.push(this.getBlogArticles(likesParser));
@@ -143,7 +192,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             this.setState({ rendernize: true });
         });
 
-        ipcRenderer.on(menu[2], (_: {}, tmbr: any, __: number) => {
+        ipcRenderer.on(menu[2], (_: {}, tmbr: tumblr.UserInfo.UserInfo, __: number) => {
             this.clear();
             this.menuStatus = menu[2];
             this.disableMoreLoad = true;
@@ -159,11 +208,11 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     private more_loading_events() {
         const prefix = '_moreLoaded';
 
-        ipcRenderer.on(menu[0] + prefix, (_: {}, tmbr: {}, limit: number) => {
+        ipcRenderer.on(menu[0] + prefix, (_: {}, tmbr: tumblr.DashboardResponse.basic, limit: number) => {
             if (!this.disableMoreLoad) {
                 this.disableMoreLoad = true;
                 this.menuStatus = menu[0];
-                const dashParser = new tmbrDashboardParse(tmbr, limit);
+                const dashParser = new TmbrDashboardParse(tmbr, limit);
 
                 if (dashParser.count_post()) {
                     this.articles.push(this.getBlogArticles(dashParser));
@@ -173,11 +222,11 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             }
         });
 
-        ipcRenderer.on(menu[1] + prefix, (_: {}, tmbr: {}, limit: number) => {
+        ipcRenderer.on(menu[1] + prefix, (_: {}, tmbr: tumblr.DashboardResponse.basic, limit: number) => {
             if (!this.disableMoreLoad) {
                 this.disableMoreLoad = true;
                 this.menuStatus = menu[1];
-                const likesParser = new tmbrLikesParse(tmbr, limit);
+                const likesParser = new TmbrLikesParse(tmbr, limit);
 
                 if (likesParser.count_post()) {
                     this.articles.push(this.getBlogArticles(likesParser));
@@ -190,9 +239,10 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
         // TODO: other change more loading event
     }
 
-    private getBlogArticles(tmbrParse: tmbrDashboardParse | tmbrLikesParse) {
+    private getBlogArticles(tmbrParse: TmbrDashboardParse | TmbrLikesParse) {
 
         let tmp: [string, string | tumblr.ImageProper][] = [];
+        this.hasDataSize += tmbrParse.count_post();
 
         for (let i = 0; i < tmbrParse.count_post(); ++i) {
             switch (tmbrParse.postType(i)) {
@@ -230,14 +280,16 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             }
         }
 
-
         return (
             <div>
                 {
                     tmp.map((item: [string, tumblr.ImageProper]) => {
+                        const classes = ['hoverActionPhoto', 'aarticle'].join(' ');
+
                         if (item[0] === postTypes.photo) {
+                            ++this.postCount;
                             return (
-                                <figure className='hoverActionPhoto'>
+                                <figure className={classes} id={this.postIDPrefix + this.postCount.toString()}>
                                     <img className='dashPhoto' src={item[1].url} />
                                     <figcaption>
                                         <h3>hogehoge</h3>
@@ -246,8 +298,10 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
                                 </figure>
                             );
                         } else if (item[0] === postTypes.text) {
+                            ++this.postCount;
+
                             return (
-                                <figure className='hoverActionPhoto'>
+                                <figure className={classes} id={this.postIDPrefix + this.postCount.toString()}>
                                     <div className='textPhoto'><p>{item[1]}</p></div>
                                     <figcaption>
                                         <h3>hogehoge</h3>
@@ -281,19 +335,27 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     }
 
     private loaded() {
-        const idname = 'photos';
+        const masonryOption = {
+            itemSelector: '.aarticle',
+            columnWidth: 0,
+            gutter: 10,
+            fitWidth: true,
+            horizontalOrder: true,
+            transitionDuration: '1.2s',
+            initLayout: true
+        };
 
         if (this.menuStatus === menu[0]) { // Dashboard
             return (
-                <div id={idname}>
+                <Masonry className='articleWrapper' options={masonryOption}>
                     {this.articles.map((item: JSX.Element) => item)}
-                </div>
+                </Masonry>
             );
         } else if (this.menuStatus === menu[1]) { // Likes
             return (
-                <div id={idname}>
+                <Masonry className='articleWrapper' options={masonryOption}>
                     {this.articles.map((item: JSX.Element) => item)}
-                </div>
+                </Masonry>
             );
         } else if (this.menuStatus === menu[2]) { // Follows
             return (
@@ -343,6 +405,8 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     }
 
     private render_impl() {
+        const visible = (isVisible: boolean) => { if (isVisible && (!this.disableMoreLoad)) { this.loadMore(); } };
+
         return (
             <main id='panel'>
                 <section>
@@ -350,7 +414,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
                 </section>
                 <div className='centernize'>
                     <Loader type='square-spin' />
-                    <VisibilitySensor onChange={(isVisible: boolean) => { if (isVisible && (!this.disableMoreLoad)) { this.loadMore(); } }} />
+                    <VisibilitySensor onChange={visible} />
                 </div>
             </main>
         );

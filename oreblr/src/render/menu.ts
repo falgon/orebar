@@ -2,7 +2,7 @@ export const menu: string[] = [
     'Dashboard', 'Likes', 'Follows', 'MyBlogs', 'Popular', 'Settings', 'About'
 ];
 
-interface postTypesInterface {
+interface PostTypesInterface {
     photo: string;
     text: string;
     quote: string;
@@ -12,7 +12,7 @@ interface postTypesInterface {
     video: string;
 }
 
-export const postTypes: postTypesInterface  = { 
+export const postTypes: PostTypesInterface  = { 
     photo: 'photo', 
     text: 'text', 
     quote: 'quote', 

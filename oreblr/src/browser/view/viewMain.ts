@@ -197,7 +197,7 @@ function loadMoreItem(Item: string, view: Viewmodule.Page, event: any) {
 }
 
 export function browser_main() {
-    var view = new Viewmodule.Page(__dirname + '/../../render/docs/dash.html');
+    const view = new Viewmodule.Page(__dirname + '/../../render/docs/dash.html');
 
     view.ipcMain.on('tumblrAuthorization', login);
 
@@ -216,7 +216,6 @@ export function browser_main() {
     });
 
     view.ipcMain.on('clicked_reload', (event: any) => {
-
         switch (view.nowOpenItem) {
             case menu[0]: {
                 tumblrData.getDashboardLatest().then((data: any) => {
@@ -255,4 +254,8 @@ export function browser_main() {
             loadMoreItem(item, view, event);
         });
     }
+
+	/*view.globalShortcut.register('Return', (_event: any) => {
+	console.log('enter event');
+    });*/
 }

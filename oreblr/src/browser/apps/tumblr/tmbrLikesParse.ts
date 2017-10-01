@@ -1,7 +1,7 @@
 /// <refernce path='./tumblr.d.ts' />
 
-export class tmbrLikesParse {
-    constructor(private postData: any, private limit: number) { }
+export class TmbrLikesParse {
+    constructor(private postData: tumblr.DashboardResponse.basic, private limit: number) { }
 
     get readLimit(): number {
         return this.limit;
@@ -80,7 +80,7 @@ export class tmbrLikesParse {
     public reblog(entryNum: number): tumblr.DashboardResponse.Reblog {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).reblog;
     }
-    public trail(entryNum: number): tumblr.DashboardResponse.trailElements.Trail {
+    public trail(entryNum: number) {
         return this.limitCheck(entryNum) ? undefined : this.at(entryNum).trail;
     }
     public image_permalink(entryNum: number): string {
