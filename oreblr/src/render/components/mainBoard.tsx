@@ -202,6 +202,8 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             this.clear();
             this.menuStatus = menu[0];
             this.disableMoreLoad = true;
+	    this.nowSelectedPostID = 0;
+	    this.postCount = 0;
 
             const dashParser = new TmbrDashboardParse(tmbr, limit);
 
@@ -216,6 +218,8 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             this.clear();
             this.menuStatus = menu[1];
             this.disableMoreLoad = true;
+	    this.nowSelectedPostID = 0;
+	    this.postCount = 0;
 
             const likesParser = new TmbrLikesParse(tmbr, limit);
 
