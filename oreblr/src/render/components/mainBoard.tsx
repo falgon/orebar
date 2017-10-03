@@ -1,15 +1,17 @@
 /// <referehce path='../../browser/apps/tumblr/tumblr.d.ts' />
 /// <referehce path='./keydetect/keyevent.d.ts' />
+/// <referehce path='./error/dnsError.d.ts' />
+
 import * as React from 'react';
 import { TmbrDashboardParse } from '../../browser/apps/tumblr/tmbrDashboardParse';
 import { TmbrLikesParse } from '../../browser/apps/tumblr/tmbrLikesParse';
 import { ipcRenderer } from 'electron';
 import { menu } from '../menu';
 import { postTypes } from '../menu';
-import { scroller } from 'react-scroll';
-import { animateScroll } from 'react-scroll';
 import Masonry from 'react-masonry-component';
 import detectKey from './keydetect/keydetect';
+import { dnsError } from './error/dnsError';
+import { polyfill } from 'smoothscroll-polyfill';
 
 const VisibilitySensor = require('react-visibility-sensor');
 const Loader = require('react-loaders').Loader;
@@ -26,6 +28,7 @@ interface MainBoardStates {
 export class MainBoard extends React.Component<undefined, MainBoardStates> {
     private menuStatus: string = menu[0];
     private is_authorized: boolean = false;
+    private ErrorStatus: DnsError = undefined;
     private disableMoreLoad: boolean = true;
     private articles: JSX.Element[] = [];
     private postCount: number = 0;
@@ -35,6 +38,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
 
     constructor(props: undefined) {
         super(props);
+        polyfill();
         this.state = { rendernize: false };
     }
 
@@ -72,6 +76,14 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             this.disableMoreLoad = false;
             this.setState({ rendernize: true });
         });
+
+        ipcRenderer.on('authorizeFailed', (_: {}, err: DnsError) => {
+            this.is_authorized = true;
+            this.ErrorStatus = err;
+            this.menuStatus = undefined;
+            this.disableMoreLoad = false;
+            this.setState({ rendernize: true });
+        });
     }
 
     private keyInput() {
@@ -82,21 +94,18 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
                     switch (detectKey(event)) {
                         case 'J': {
                             ++this.nowSelectedPostID;
-
                             if (this.hasDataSize + 1 <= this.nowSelectedPostID) {
-                                animateScroll.scrollToBottom();
-                                // FIXME: https://github.com/fisshy/react-scroll/pull/114
+                                document.getElementById('panel').scroll({ top: document.getElementById('panel').scrollHeight, behavior: 'smooth' });
                             } else {
-                                scroller.scrollTo(this.postIDPrefix + this.nowSelectedPostID.toString(), {});
-                                // FIXME: https://github.com/fisshy/react-scroll/pull/114
+                                document.getElementById(this.postIDPrefix + this.nowSelectedPostID.toString()).scrollIntoView({ behavior: 'smooth' });
                             }
                             break;
                         }
                         case 'K': {
-                            this.nowSelectedPostID = this.nowSelectedPostID > 1 ?
-                                this.nowSelectedPostID - 1 :
-                                this.nowSelectedPostID;
-                            scroller.scrollTo(this.postIDPrefix + this.nowSelectedPostID.toString(), {});
+                            if (this.nowSelectedPostID > 1) {
+                                this.nowSelectedPostID -= 1;
+                                document.getElementById(this.postIDPrefix + this.nowSelectedPostID.toString()).scrollIntoView({ behavior: 'smooth' });
+                            }
                             break;
                         }
                         default: {
@@ -106,7 +115,15 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
                     break;
                 }
                 default: {
-                    alert('hoge');
+                    switch (detectKey(event)) {
+                        case 'Ctrl+Q': {
+                            ipcRenderer.send('clicked_quit');
+                            break;
+                        }
+                        default: {
+                            // TODO: catch another input
+                        }
+                    }
                 }
             }
         });
@@ -115,16 +132,34 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     private gotEmpty() {
         this.clear();
 
-        return (
-            <main id='panel'>
-                <div className='centernize'>
-                    <p id='noPosts'>
-                        {React.createElement(require('react-icons/lib/md/no-sim'), { size: 90 })}
-                        <span className='br' id='noPostsMes'>No posts to display.</span>
-                    </p>
-                </div>
-            </main>
-        );
+        if (this.ErrorStatus === undefined) {
+            return (
+                <main id='panel'>
+                    <div className='centernize'>
+                        <p id='noPosts'>
+                            {React.createElement(require('react-icons/lib/md/no-sim'), { size: 90 })}
+                            <span className={['br', 'noPostsMes'].join(' ')}>No posts to display.</span>
+                        </p>
+                    </div>
+                </main>
+            );
+        } else {
+            let errorMessage: string[] = dnsError(this.ErrorStatus.code);
+            return (
+                <main id='panel'>
+                    <div className='centernize'>
+                        <p id='noPosts'>
+                            {React.createElement(require('react-icons/lib/md/no-sim'), { size: 90 })}
+                            {
+                                errorMessage.map((err: string) => {
+                                    return <span key={err} className={['br', 'noPostsMes'].join(' ')}>{err}</span>;
+                                })
+                            }
+                        </p>
+                    </div>
+                </main>
+            );
+        }
     }
 
     private sidebar_button_events() {
@@ -241,17 +276,17 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
 
     private getBlogArticles(tmbrParse: TmbrDashboardParse | TmbrLikesParse) {
 
-        let tmp: [string, string | tumblr.ImageProper][] = [];
+        let tmp: [string, string | tumblr.ImageProper, string][] = [];
         this.hasDataSize += tmbrParse.count_post();
 
         for (let i = 0; i < tmbrParse.count_post(); ++i) {
             switch (tmbrParse.postType(i)) {
                 case postTypes.photo: {
-                    tmp.push([tmbrParse.postType(i), tmbrParse.original_image(i)]);
+                    tmp.push([tmbrParse.postType(i), tmbrParse.original_image(i), tmbrParse.caption(i)]);
                     break;
                 }
                 case postTypes.text: {
-                    tmp.push([tmbrParse.postType(i), this.removeTag(tmbrParse.body(i))]);
+                    tmp.push([tmbrParse.postType(i), this.removeTag(tmbrParse.body(i)), tmbrParse.title(i)]);
                     break;
                 }
                 case postTypes.quote: {
@@ -283,7 +318,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
         return (
             <div>
                 {
-                    tmp.map((item: [string, tumblr.ImageProper]) => {
+                    tmp.map((item: [string, tumblr.ImageProper, string]) => {
                         const classes = ['hoverActionPhoto', 'aarticle'].join(' ');
 
                         if (item[0] === postTypes.photo) {
@@ -291,20 +326,27 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
                             return (
                                 <figure className={classes} id={this.postIDPrefix + this.postCount.toString()}>
                                     <img className='dashPhoto' src={item[1].url} />
+                                    <nav className='navButtons'>
+                                        {React.createElement(require('react-icons/lib/fa/chain'), { size: 24 })}
+                                    </nav>
                                     <figcaption>
                                         <h3>hogehoge</h3>
-                                        <p>this is test</p>
+                                        <p>{this.removeTag(item[2])}</p>
                                     </figcaption>
                                 </figure>
                             );
                         } else if (item[0] === postTypes.text) {
                             ++this.postCount;
-
                             return (
                                 <figure className={classes} id={this.postIDPrefix + this.postCount.toString()}>
-                                    <div className='textPhoto'><p>{item[1]}</p></div>
+                                    <div className='textPhoto'>
+                                        <h3>{item[2]}</h3>
+                                        <p>{item[1]}</p>
+                                    </div>
+                                    <nav className='navButtons'>
+                                        {React.createElement(require('react-icons/lib/fa/chain'), { size: 24 })}
+                                    </nav>
                                     <figcaption>
-                                        <h3>hogehoge</h3>
                                         <p>this is test</p>
                                     </figcaption>
                                 </figure>

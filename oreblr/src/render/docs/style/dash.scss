@@ -18,8 +18,8 @@
     text-align: center;
 }
 
-#noPostsMes {
-    margin-top:10px;
+.noPostsMes {
+    margin-top: 10px;
 }
 
 .slideout-menu {
@@ -30,20 +30,22 @@
     right: 0;
     z-index: 0;
     width: $sidemenu_padding;
-    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     display: none;
+    overflow-y: scroll;
 }
 
 .slideout-panel {
     position: relative;
     z-index: 1;
     will-change: transform;
+    background-color: $theme_color;
 }
 
 .slideout-open,
 .slideout-open body,
 .slideout-open .slideout-panel {
+    overflow-x: hidden;
 }
 
 .slideout-open .slideout-menu {
@@ -54,15 +56,12 @@ html {
     height: 100%;
 }
 
-
-body{
+body {
     width: 100%;
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Original Yu Gothic", "Yu Gothic", YuGothic, Verdana, Meiryo, "M+ 1p", sans-serif;
     animation: fadeIn 2s ease 0s 1 normal;
     -webkit-animation: fadeIn 2s ease 0s 1 normal;
 }
-
-
 
 .dashPhoto {
     @extend body;
@@ -80,14 +79,14 @@ body{
     color: #000;
     box-sizing: border-box;
     padding: 40px;
-    
-    width:100% !important;
+
+    width: 100% !important;
     height: auto !important;
 
     p {
-	line-height:110%;
-    	white-space: normal;
-    	word-wrap: break-word;
+        line-height: 110%;
+        white-space: normal;
+        word-wrap: break-word;
     }
 }
 
@@ -130,6 +129,7 @@ main {
 
     color: #fff;
     min-height: 100%;
+    overflow: scroll;
 }
 
 header {
@@ -171,6 +171,10 @@ $distance: 200px;
 }
 
 .aarticle {
+    position: relative;
     margin-top: 10px;
-    
+
+    &:hover .navButtons {
+	opacity: 0.7;
+    }
 }

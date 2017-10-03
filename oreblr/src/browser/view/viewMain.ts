@@ -1,3 +1,6 @@
+/// <reference path='../../browser/apps/tumblr/tumblr.d.ts' />
+/// <reference path='../../render/components/error/dnsError.d.ts' />
+
 import * as Viewmodule from './view';
 import * as express from 'express';
 import * as fs from 'fs';
@@ -80,7 +83,7 @@ function getAccessToken(event: any) {
 
                     tumblrData = tumblr;
 
-                    tumblr.getDashboardLatest().then((result: any) => {
+                    tumblr.getDashboardLatest().then((result: tumblr.DashboardResponse.basic) => {
                         event.sender.send('authorizeComplete', result, tumblr.readLimit);
                         console.log(productName + ': Authorize succeed');
                     }).catch((err: Error) => {
@@ -102,11 +105,12 @@ function login(event: any) {
             const tumblr: tumblrCli.tumblrCli = new tumblrCli.tumblrCli([CONSUMER_KEY, CONSUMER_SECRET, splitToken[0], splitToken[1]]);
             tumblrData = tumblr;
 
-            tumblr.getDashboardLatest().then((result: any) => {
+            tumblr.getDashboardLatest().then((result: tumblr.DashboardResponse.basic) => {
                 event.sender.send('authorizeComplete', result, tumblr.readLimit);
                 console.log(productName + ': Authorize succeed');
-            }).catch((err: Error) => {
+	    }).catch((err: DnsError) => {
                 console.log(err);
+		event.sender.send('authorizeFailed', err); 
             });
         } else {
             console.log(productName + ': ill-formed, getting access token...');
@@ -123,17 +127,17 @@ function loadOtherItem(Item: string, view: Viewmodule.Page, event: any) {
 
         if (Item === menu[0]) {
 
-            tumblrData.getDashboardLatest().then((data: any) => {
+            tumblrData.getDashboardLatest().then((data: tumblr.DashboardResponse.basic) => {
                 event.sender.send(Item, data, tumblrData.readLimit);
                 view.nowOpenItem = Item;
                 console.log(productName + ': ipc: sended => ' + menu[0]);
-            }).catch((err: Error) => {
+            }).catch((err: DnsError) => {
                 console.log(err);
             });
 
         } else if (Item === menu[1]) {
 
-            tumblrData.getLikes().then((data: any) => {
+            tumblrData.getLikes().then((data: tumblr.DashboardResponse.basic) => {
                 event.sender.send(Item, data, tumblrData.readLimit);
                 view.nowOpenItem = Item;
                 console.log(productName + ': ipc: sended => ' + menu[1]);
@@ -170,7 +174,7 @@ function loadMoreItem(Item: string, view: Viewmodule.Page, event: any) {
 
     switch (Item) {
         case menu[0]: {
-            tumblrData.getDashboardNext().then((data: any) => {
+            tumblrData.getDashboardNext().then((data: tumblr.DashboardResponse.basic) => {
                 event.sender.send(menu[0] + suffix, data, tumblrData.readLimit);
                 view.nowOpenItem = menu[0];
                 console.log(productName + ': ipc: sended => ' + menu[0] + suffix);
@@ -180,7 +184,7 @@ function loadMoreItem(Item: string, view: Viewmodule.Page, event: any) {
             break;
         }
         case menu[1]: {
-            tumblrData.getLikesNext().then((data: any) => {
+            tumblrData.getLikesNext().then((data: tumblr.DashboardResponse.basic) => {
                 event.sender.send(menu[1] + suffix, data, tumblrData.readLimit);
                 view.nowOpenItem = menu[1];
                 console.log(productName + ': ipc: sended => ' + menu[1] + suffix);
@@ -218,7 +222,7 @@ export function browser_main() {
     view.ipcMain.on('clicked_reload', (event: any) => {
         switch (view.nowOpenItem) {
             case menu[0]: {
-                tumblrData.getDashboardLatest().then((data: any) => {
+                tumblrData.getDashboardLatest().then((data: tumblr.DashboardResponse.basic) => {
                     event.sender.send('reloaded_data', view.nowOpenItem, data, tumblrData.readLimit);
                     console.log(productName + ': ipc: sended => ' + view.nowOpenItem + ' reloaded_data');
                 }).catch((err: Error) => {
@@ -227,7 +231,7 @@ export function browser_main() {
                 break;
             }
             case menu[1]: {
-                tumblrData.getLikes().then((data: any) => {
+                tumblrData.getLikes().then((data: tumblr.DashboardResponse.basic) => {
                     event.sender.send('reloaded_data', view.nowOpenItem, data, tumblrData.readLimit);
                     console.log(productName + ': ipc: sended => ' + view.nowOpenItem + ' reloaded_data');
                 }).catch((err: Error) => {
@@ -254,8 +258,4 @@ export function browser_main() {
             loadMoreItem(item, view, event);
         });
     }
-
-	/*view.globalShortcut.register('Return', (_event: any) => {
-	console.log('enter event');
-    });*/
 }

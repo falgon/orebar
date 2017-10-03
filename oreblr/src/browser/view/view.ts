@@ -37,7 +37,7 @@ export class Page {
         this.mb.setOption('backgroundColor', '#36465d');
         this.mb.setOption('width', 640);
         this.mb.setOption('height', 400);
-        this.mb.setOption('minWidth', 600);
+        this.mb.setOption('minWidth', 350);
         this.mb.setOption('minHeight', 400);
         this.mb.setOption('resizable', true);
         this.mb.setOption('movable', false);

@@ -1,5 +1,9 @@
 @import './_config.scss';
 
+#menu {
+    animation: fadeIn 0.5s ease 0s 1 normal;
+}
+
 #sidemenu {
     margin: 0;
     padding: 0;
@@ -69,10 +73,10 @@
 
 #sidemenuTitle {
     cursor: default;
-    font-family: 'Bookman Old Style'; 
-    font-size: 24px; 
-    font-style: normal; 
-    font-variant: normal; 
+    font-family: 'Bookman Old Style';
+    font-size: 24px;
+    font-style: normal;
+    font-variant: normal;
     font-weight: bold;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
