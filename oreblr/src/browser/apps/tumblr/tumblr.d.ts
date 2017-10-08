@@ -1,4 +1,14 @@
 declare module tumblr {
+    export interface reblogPostResponse {
+	id: number;
+    }
+    export interface reblogRequests {
+	id: number;
+	reblog_key: string;
+	comment?: string;
+	native_inline_images?: boolean;
+    }
+
     export interface ImageProper {
         url: string;
         width: number;
@@ -25,7 +35,8 @@ declare module tumblr {
         userInfo(): Promise<UserInfo.UserInfo>;
         userDashboard(_: params, __: callbackType): Promise<Object>;
         userLikes(_: params, __: callbackType): Promise<Object>;
-        userFollowing(_: params, __: callbackType): Promise<Object>;
+	userFollowing(_: params, __: callbackType): Promise<Object>;
+	reblogPost(_: string, __: tumblr.reblogRequests, ___?: callbackType): Promise<Object>;
         returnPromises(): void;
     }
 

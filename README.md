@@ -5,8 +5,10 @@
 | [![Build Status](https://travis-ci.org/falgon/oreblr.svg?branch=develop)](https://travis-ci.org/falgon/oreblr) |
 | [![Run Status](https://api.shippable.com/projects/59d9b8e7183eb30700051687/badge?branch=develop)](https://app.shippable.com/github/falgon/oreblr) |
 
-[![Issue Count](https://codeclimate.com/github/falgon/oreblr/badges/issue_count.svg)](https://codeclimate.com/github/falgon/oreblr)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9604e7d226db4292aa76f90c6a7d244f)](https://www.codacy.com/app/falgon/oreblr?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=falgon/oreblr&amp;utm_campaign=Badge_Grade)
+| Code quality |
+|:------------:|
+| [![Issue Count](https://codeclimate.com/github/falgon/oreblr/badges/issue_count.svg)](https://codeclimate.com/github/falgon/oreblr) |
+| [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9604e7d226db4292aa76f90c6a7d244f)](https://www.codacy.com/app/falgon/oreblr?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=falgon/oreblr&amp;utm_campaign=Badge_Grade) |
 
 Oreblr is the cross-platform tumblr client on the menu bar.
 

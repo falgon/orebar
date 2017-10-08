@@ -1,6 +1,6 @@
-/// <referehce path='../../browser/apps/tumblr/tumblr.d.ts' />
-/// <referehce path='./keydetect/keyevent.d.ts' />
-/// <referehce path='./error/dnsError.d.ts' />
+/// <reference path='../../browser/apps/tumblr/tumblr.d.ts' />
+/// <reference path='./keydetect/keyevent.d.ts' />
+/// <reference path='./error/dnsError.d.ts' />
 
 import * as React from 'react';
 import { TmbrDashboardParse } from '../../browser/apps/tumblr/tmbrDashboardParse';
@@ -51,6 +51,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
         this.sidebar_button_events();
         this.change_column_events();
         this.more_loading_events();
+	this.responcePosts();
         this.keyInput();
     }
 
@@ -83,6 +84,15 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             this.disableMoreLoad = false;
             this.setState({ rendernize: true });
         });
+    }
+
+    private responcePosts() {
+	ipcRenderer.on('DidSuccessReblog', (_:{}, _postedURI: string) => {
+
+	});
+	ipcRenderer.on('DidFailReblog', (_:{}, _err: Error) => {
+	
+	});
     }
 
     private keyInput() {
@@ -278,22 +288,26 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     }
 
     private getBlogArticles(tmbrParse: TmbrDashboardParse | TmbrLikesParse) {
+        let bodyInfo: [string, string | tumblr.ImageProper, string][] = [];
+        let postReblogInfo: [boolean, string, tumblr.reblogRequests][] = [];
 
-        let tmp: [string, string | tumblr.ImageProper, string][] = [];
         this.hasDataSize += tmbrParse.count_post();
 
         for (let i = 0; i < tmbrParse.count_post(); ++i) {
             switch (tmbrParse.postType(i)) {
                 case postTypes.photo: {
-                    tmp.push([tmbrParse.postType(i), tmbrParse.original_image(i), tmbrParse.caption(i)]);
+                    bodyInfo.push([tmbrParse.postType(i), tmbrParse.original_image(i), tmbrParse.caption(i)]);
+                    postReblogInfo.push([tmbrParse.can_reblog(i), tmbrParse.blogName(i), { id: tmbrParse.id(i), reblog_key: tmbrParse.reblog_key(i) }]);
                     break;
                 }
                 case postTypes.text: {
-                    tmp.push([tmbrParse.postType(i), this.removeTag(tmbrParse.body(i)), tmbrParse.title(i)]);
+                    bodyInfo.push([tmbrParse.postType(i), this.removeTag(tmbrParse.body(i)), tmbrParse.title(i)]);
+                    postReblogInfo.push([tmbrParse.can_reblog(i), tmbrParse.blogName(i), { id: tmbrParse.id(i), reblog_key: tmbrParse.reblog_key(i) }]);
                     break;
                 }
                 case postTypes.quote: {
-                    tmp.push([tmbrParse.postType(i), tmbrParse.text(i), tmbrParse.source(i)]);
+                    bodyInfo.push([tmbrParse.postType(i), tmbrParse.text(i), tmbrParse.source(i)]);
+                    postReblogInfo.push([tmbrParse.can_reblog(i), tmbrParse.blogName(i), { id: tmbrParse.id(i), reblog_key: tmbrParse.reblog_key(i) }]);
                     break;
                 }
                 case postTypes.link: {
@@ -318,15 +332,18 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             }
         }
 
+        let counter = 0;
+        const classes = ['hoverActionPhoto', 'aarticle'].join(' ');
+
         return (
             <div>
                 {
-                    tmp.map((item: [string, tumblr.ImageProper, string]) => {
-                        const classes = ['hoverActionPhoto', 'aarticle'].join(' ');
+                    bodyInfo.map((item: [string, tumblr.ImageProper, string]) => {
 
                         switch (item[0]) {
                             case postTypes.photo: {
                                 ++this.postCount;
+                                ++counter;
                                 return (
                                     <figure className={classes} id={this.postIDPrefix + this.postCount.toString()}>
                                         <img className='dashPhoto' src={item[1].url} />
@@ -334,12 +351,13 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
                                             <h3>hogehoge</h3>
                                             <p>{this.removeTag(item[2])}</p>
                                         </figcaption>
-                                        <GnavButton />
+                                        <GnavButton canReblog={postReblogInfo[counter - 1][0]} blogIdentifier={postReblogInfo[counter - 1][1]} params={postReblogInfo[counter - 1][2]} />
                                     </figure>
                                 );
                             }
                             case postTypes.text: {
                                 ++this.postCount;
+                                ++counter;
                                 return (
                                     <figure className={classes} id={this.postIDPrefix + this.postCount.toString()}>
                                         <div className='textPhoto'>
@@ -349,19 +367,20 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
                                         <figcaption>
                                             <p>this is test</p>
                                         </figcaption>
-                                        <GnavButton />
+                                        <GnavButton canReblog={postReblogInfo[counter - 1][0]} blogIdentifier={postReblogInfo[counter - 1][1]} params={postReblogInfo[counter - 1][2]} />
                                     </figure>
                                 );
                             }
                             case postTypes.quote: {
                                 ++this.postCount;
+                                ++counter;
                                 return (
                                     <figure className={classes} id={this.postIDPrefix + this.postCount.toString()}>
                                         <div className='textPhoto'>
                                             <h3>{item[1]}</h3>
                                             <p>{item[2]}</p>
                                         </div>
-                                        <GnavButton />
+                                        <GnavButton canReblog={postReblogInfo[counter - 1][0]} blogIdentifier={postReblogInfo[counter - 1][1]} params={postReblogInfo[counter - 1][2]} />
                                         <figcaption>
                                             <p>this is test</p>
                                         </figcaption>

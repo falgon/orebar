@@ -268,4 +268,19 @@ export function browser_main() {
             loadMoreItem(item, view, event);
         });
     }
+
+    view.ipcMain.on('DoReblog', (event: any, _: string, params: tumblr.reblogRequests) => {
+	tumblrData.getUserInfo().then((userinfo: any) => {
+	    const blogIdentifier = userinfo.user.name + '.tumblr.com';
+            tumblrData.postReblog(blogIdentifier, params).then((response: tumblr.reblogPostResponse) => {
+		event.sender.send('DidSuccessReblog', blogIdentifier + '/' + response.id.toString());
+                console.log(productName + ': ipc: sended => Reloging successed ' + response.id.toString());
+	    }).catch((err: Error) => {
+		event.sender.send('DidFailReblog', err);
+                console.log(err);
+            });
+        }).catch((err: Error) => {
+            console.log(err);
+        });
+    });
 }

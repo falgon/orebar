@@ -69,6 +69,10 @@ export class tumblrCli {
         });
     }
 
+    public postReblog(blogIdentifier: string, params:tumblr.reblogRequests) {
+	return this.client.reblogPost(blogIdentifier, params);
+    }
+
     get readPos(): number {
         return this.read_pos;
     }
