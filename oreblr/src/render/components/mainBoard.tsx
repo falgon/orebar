@@ -8,14 +8,13 @@ import { TmbrLikesParse } from '../../browser/apps/tumblr/tmbrLikesParse';
 import { ipcRenderer } from 'electron';
 import { menu } from '../menu';
 import { postTypes } from '../menu';
-import Masonry from 'react-masonry-component';
-import detectKey from './keydetect/keydetect';
 import { dnsError } from './error/dnsError';
 import { polyfill } from 'smoothscroll-polyfill';
-
+import { GnavButton } from './navButton';
+import Masonry from 'react-masonry-component';
+import detectKey from './keydetect/keydetect';
 const VisibilitySensor = require('react-visibility-sensor');
 const Loader = require('react-loaders').Loader;
-
 require('../docs/style/loader.scss');
 require('../docs/style/dash.scss');
 require('../docs/style/sidemenu.scss');
@@ -294,7 +293,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
                     break;
                 }
                 case postTypes.quote: {
-                    // TODO: quote
+                    tmp.push([tmbrParse.postType(i), tmbrParse.text(i), tmbrParse.source(i)]);
                     break;
                 }
                 case postTypes.link: {
@@ -325,46 +324,68 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
                     tmp.map((item: [string, tumblr.ImageProper, string]) => {
                         const classes = ['hoverActionPhoto', 'aarticle'].join(' ');
 
-                        if (item[0] === postTypes.photo) {
-                            ++this.postCount;
-                            return (
-                                <figure className={classes} id={this.postIDPrefix + this.postCount.toString()}>
-                                    <img className='dashPhoto' src={item[1].url} />
-                                    <nav className='navButtons'>
-                                        {React.createElement(require('react-icons/lib/fa/chain'), { size: 24 })}
-                                    </nav>
-                                    <figcaption>
-                                        <h3>hogehoge</h3>
-                                        <p>{this.removeTag(item[2])}</p>
-                                    </figcaption>
-                                </figure>
-                            );
-                        } else if (item[0] === postTypes.text) {
-                            ++this.postCount;
-                            return (
-                                <figure className={classes} id={this.postIDPrefix + this.postCount.toString()}>
-                                    <div className='textPhoto'>
-                                        <h3>{item[2]}</h3>
-                                        <p>{item[1]}</p>
-                                    </div>
-                                    <nav className='navButtons'>
-                                        {React.createElement(require('react-icons/lib/fa/chain'), { size: 24 })}
-                                    </nav>
-                                    <figcaption>
-                                        <p>this is test</p>
-                                    </figcaption>
-                                </figure>
-                            );
-                        } else if (item[0] === postTypes.quote) {
-                            // TODO: quote
-                        } else if (item[0] === postTypes.link) {
-                            // TODO: link
-                        } else if (item[0] === postTypes.chat) {
-                            // TODO: chat
-                        } else if (item[0] === postTypes.audio) {
-                            // TODO: audio
-                        } else if (item[0] === postTypes.video) {
-                            // TODO: video
+                        switch (item[0]) {
+                            case postTypes.photo: {
+                                ++this.postCount;
+                                return (
+                                    <figure className={classes} id={this.postIDPrefix + this.postCount.toString()}>
+                                        <img className='dashPhoto' src={item[1].url} />
+                                        <figcaption>
+                                            <h3>hogehoge</h3>
+                                            <p>{this.removeTag(item[2])}</p>
+                                        </figcaption>
+                                        <GnavButton />
+                                    </figure>
+                                );
+                            }
+                            case postTypes.text: {
+                                ++this.postCount;
+                                return (
+                                    <figure className={classes} id={this.postIDPrefix + this.postCount.toString()}>
+                                        <div className='textPhoto'>
+                                            <h3>{item[2]}</h3>
+                                            <p>{item[1]}</p>
+                                        </div>
+                                        <figcaption>
+                                            <p>this is test</p>
+                                        </figcaption>
+                                        <GnavButton />
+                                    </figure>
+                                );
+                            }
+                            case postTypes.quote: {
+                                ++this.postCount;
+                                return (
+                                    <figure className={classes} id={this.postIDPrefix + this.postCount.toString()}>
+                                        <div className='textPhoto'>
+                                            <h3>{item[1]}</h3>
+                                            <p>{item[2]}</p>
+                                        </div>
+                                        <GnavButton />
+                                        <figcaption>
+                                            <p>this is test</p>
+                                        </figcaption>
+                                    </figure>
+                                );
+                            }
+                            case postTypes.quote: {
+                                break;
+                            }
+                            case postTypes.link: {
+                                break;
+                            }
+                            case postTypes.chat: {
+                                break;
+                            }
+                            case postTypes.audio: {
+                                break;
+                            }
+                            case postTypes.video: {
+                                break;
+                            }
+                            default: {
+                                break;
+                            }
                         }
                     })
                 }
@@ -391,55 +412,65 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
             initLayout: true
         };
 
-        if (this.menuStatus === menu[0]) { // Dashboard
-            return (
-                <Masonry className='articleWrapper' options={masonryOption}>
-                    {this.articles.map((item: JSX.Element) => item)}
-                </Masonry>
-            );
-        } else if (this.menuStatus === menu[1]) { // Likes
-            return (
-                <Masonry className='articleWrapper' options={masonryOption}>
-                    {this.articles.map((item: JSX.Element) => item)}
-                </Masonry>
-            );
-        } else if (this.menuStatus === menu[2]) { // Follows
-            return (
-                <div>
-                    <h2>{menu[2]}</h2>
-                    {this.articles}
-                </div>
-            );
-        } else if (this.menuStatus === menu[3]) { // MyBlogs
-            return (
-                <div>
-                    <h2>MyBlogs Section</h2>
-                    <p>{this.articles}</p>
-                </div>
-            );
-        } else if (this.menuStatus === menu[4]) { // Popular
-            return (
-                <div>
-                    <h2>Popular Section</h2>
-                    <p>{this.articles}</p>
-                </div>
-            );
-        } else if (this.menuStatus === menu[5]) { // Settings
-            return (
-                <div>
-                    <h2>Settings Section</h2>
-                    <p>{this.articles}</p>
-                </div>
-            );
-        } else if (this.menuStatus === menu[6]) { // About
-            return (
-                <div>
-                    <h2>About Section</h2>
-                    <p>{this.articles}</p>
-                </div>
-            );
+        switch (this.menuStatus) {
+            case menu[0]: {
+                return (
+                    <Masonry className='articleWrapper' options={masonryOption}>
+                        {this.articles.map((item: JSX.Element) => item)}
+                    </Masonry>
+                );
+            }
+            case menu[1]: { // Likes
+                return (
+                    <Masonry className='articleWrapper' options={masonryOption}>
+                        {this.articles.map((item: JSX.Element) => item)}
+                    </Masonry>
+                );
+            }
+            case menu[2]: { // Follows
+                return (
+                    <div>
+                        <h2>{menu[2]}</h2>
+                        {this.articles}
+                    </div>
+                );
+            }
+            case menu[3]: { // MyBlogs
+                return (
+                    <div>
+                        <h2>MyBlogs Section</h2>
+                        <p>{this.articles}</p>
+                    </div>
+                );
+            }
+            case menu[4]: { // Popular
+                return (
+                    <div>
+                        <h2>Popular Section</h2>
+                        <p>{this.articles}</p>
+                    </div>
+                );
+            }
+            case menu[5]: { // Settings
+                return (
+                    <div>
+                        <h2>Settings Section</h2>
+                        <p>{this.articles}</p>
+                    </div>
+                );
+            }
+            case menu[6]: { // About
+                return (
+                    <div>
+                        <h2>About Section</h2>
+                        <p>{this.articles}</p>
+                    </div>
+                );
+            }
+            default: {
+                return <div><h2>Section</h2><p>Loading Error</p></div>;
+            }
         }
-        return <div><h2>Section</h2><p>Loading Error</p></div>;
     }
 
     private displayMain() {

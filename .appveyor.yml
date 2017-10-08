@@ -1,0 +1,21 @@
+install:
+    - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
+    - node --version
+    - npm i -g npm
+    - npm --version
+    - npm i -g node-gyp
+    - copy c:\MinGW\bin\mingw32-make.exe c:\MinGW\bin\make.exe
+test_script:
+    - c:\MinGW\bin\make.exe
+init:
+    - git config --global core.autocrlf false
+branches:
+    only: 
+        - develop
+    except:
+        - master
+environment:
+    matrix:
+        - nodejs_version: "8"
+build: off
+deploy: off

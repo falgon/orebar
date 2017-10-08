@@ -112,6 +112,12 @@ export class TmbrDashboardParse {
                 height: this.photos(entryNum)[0].original_size.width
             };
     }
+    public text(entryNum: number): string {
+        return this.limitCheck(entryNum) ? undefined : this.at(entryNum).text;
+    }
+    public source(entryNum: number): string {
+        return this.limitCheck(entryNum) ? undefined : this.at(entryNum).source;
+    }
 
     private limitCheck(n: number): boolean {
         return n >= this.limit;

@@ -29,8 +29,6 @@ declare module tumblr {
         returnPromises(): void;
     }
 
-    
-
     module DashboardResponse {
         export interface Reblog {
             comment: string;
@@ -111,7 +109,8 @@ declare module tumblr {
             can_reply: boolean;
             display_avatar: boolean;
 	    body: string;
-
+	    text: string;
+	    source: string;
 	}
 
 	export interface basic {

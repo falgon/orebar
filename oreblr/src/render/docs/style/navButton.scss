@@ -1,0 +1,26 @@
+#reblogButton {
+    transition: all -0.2s linear;
+    z-index: 99;
+    position: relative;
+    margin-left: 3px;
+
+    &:hover {
+        color: #56BC8A;
+    }
+}
+
+#likeButton {
+    @extend #reblogButton;
+    margin-left: 5px;
+    &:hover {
+        color: #D95E40;
+    }
+}
+
+#chainButton {
+    @extend #reblogButton;
+    margin: 0 5px 0 7px;
+    &:hover {
+	color: gray;
+    }
+}

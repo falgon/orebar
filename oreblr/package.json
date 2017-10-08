@@ -58,7 +58,6 @@
     "loaders.css": "0.1.2",
     "menubar": "5.2.3",
     "node": "8.3.0",
-    "node-mutex": "^0.2.2",
     "node-sass": "4.5.3",
     "oauth": "0.9.15",
     "opener": "1.4.3",

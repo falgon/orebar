@@ -141,10 +141,14 @@
 }
 
 .navButtons {
+    border-radius: 5px;
+    z-index: 99;
     margin: 5px;
+    padding: 3px;
     opacity: 0;
     color: white;
-    background-color:rgba(255,255,255,0);
+    background-color: black;
+    filter: drop-shadow(0 0 10px black);
     position: absolute;
     right: 0;
     bottom: 0;
