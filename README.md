@@ -1,5 +1,7 @@
 # Oreblr
 
+![preview](https://media.githubusercontent.com/media/falgon/oreblr/image/preview/prev.gif "preview")
+
 | Linux / OSX | 
 |:-----------:|
 | [![Build Status](https://travis-ci.org/falgon/oreblr.svg?branch=develop)](https://travis-ci.org/falgon/oreblr) |
