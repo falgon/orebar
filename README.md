@@ -2,13 +2,6 @@
 Oreblr is the cross-platform tumblr client on the menu bar.
 This project is still development stage....
 
-## Preview
-### Youtube
-[![movie](https://img.youtube.com/vi/6pmVQ8IjQDg/0.jpg)](https://www.youtube.com/watch?v=6pmVQ8IjQDg)
-
-### GIF
-![preview](https://media.githubusercontent.com/media/falgon/oreblr/image/preview/prev.gif "preview")
-
 | Linux / OSX | 
 |:-----------:|
 | [![Build Status](https://travis-ci.org/falgon/oreblr.svg?branch=develop)](https://travis-ci.org/falgon/oreblr) |
@@ -19,6 +12,12 @@ This project is still development stage....
 | [![Issue Count](https://codeclimate.com/github/falgon/oreblr/badges/issue_count.svg)](https://codeclimate.com/github/falgon/oreblr) |
 | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9604e7d226db4292aa76f90c6a7d244f)](https://www.codacy.com/app/falgon/oreblr?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=falgon/oreblr&amp;utm_campaign=Badge_Grade) |
 
+## Preview
+### Youtube
+[![movie](https://img.youtube.com/vi/6pmVQ8IjQDg/0.jpg)](https://www.youtube.com/watch?v=6pmVQ8IjQDg)
+
+### GIF
+![preview](https://media.githubusercontent.com/media/falgon/oreblr/image/preview/prev.gif "preview")
 
 ## Task
 
