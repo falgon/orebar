@@ -51,7 +51,7 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
         this.sidebar_button_events();
         this.change_column_events();
         this.more_loading_events();
-	this.responcePosts();
+        this.responcePosts();
         this.keyInput();
     }
 
@@ -87,12 +87,8 @@ export class MainBoard extends React.Component<undefined, MainBoardStates> {
     }
 
     private responcePosts() {
-	ipcRenderer.on('DidSuccessReblog', (_:{}, _postedURI: string) => {
-
-	});
-	ipcRenderer.on('DidFailReblog', (_:{}, _err: Error) => {
-	
-	});
+        ipcRenderer.on('DidSuccessReblog', (_: {}, _postedURI: string) => {/* */});
+        ipcRenderer.on('DidFailReblog', (_: {}, _err: Error) => {/* */});
     }
 
     private keyInput() {

@@ -27,9 +27,9 @@ export class GnavButton extends React.Component<GnavButtonProps, GnavButtonStats
     }
 
     public componentDidMount() {
-	ipcRenderer.on('DidSuccessReblog', () => {
-	    this.setState({ rendernize: true });
-	});
+        ipcRenderer.on('DidSuccessReblog', () => {
+            this.setState({ rendernize: true });
+        });
     }
 
     public render() {

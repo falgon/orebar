@@ -1,6 +1,7 @@
 .DS_Store
 *.swp
 *.js.map
+*.js
 *.log
 node_modules
 dist

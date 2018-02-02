@@ -53,7 +53,7 @@
     "@types/react-dom": "15.5.4",
     "@types/react-icons": "2.2.2",
     "@types/slideout": "0.1.19",
-    "electron": "1.7.6",
+    "electron": "1.7.11",
     "express": "4.15.4",
     "loaders.css": "0.1.2",
     "menubar": "5.2.3",
