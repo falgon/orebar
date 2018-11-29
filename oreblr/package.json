@@ -41,7 +41,8 @@
     "react-masonry-component": "^5.0.7",
     "smoothscroll-polyfill": "^0.4.0",
     "tslint": "^5.7.0",
-    "tslint-loader": "^3.5.3"
+    "tslint-loader": "^3.5.3",
+    "webpack-cli": "^3.1.2"
   },
   "dependencies": {
     "@types/express": "4.0.37",
@@ -54,11 +55,11 @@
     "@types/react-icons": "2.2.2",
     "@types/slideout": "0.1.19",
     "electron": "1.7.11",
-    "express": "4.15.4",
+    "express": "^4.16.3",
     "loaders.css": "0.1.2",
     "menubar": "5.2.3",
     "node": "8.3.0",
-    "node-sass": "4.5.3",
+    "node-sass": "^4.9.3",
     "oauth": "0.9.15",
     "opener": "1.4.3",
     "react": "15.6.1",

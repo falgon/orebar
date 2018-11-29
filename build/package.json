@@ -13,7 +13,7 @@
   "author": "roki <falgon53@yahoo.co.jp>",
   "devDependencies": {
     "@types/electron-packager": "8.7.3",
-    "electron-packager": "^9.0.1",
+    "electron-packager": "^12.2.0",
     "typescript": "^2.5.2"
   },
   "scripts": {
@@ -24,6 +24,6 @@
     "ajv-keywords": "^2.1.0",
     "asar": "^0.13.0",
     "systemjs": "^0.20.18",
-    "webpack": "^3.5.6"
+    "webpack": "^4.20.2"
   }
 }
